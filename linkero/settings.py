@@ -25,7 +25,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'linkero.ie']
 
 
 # Application definition
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'cases',
+    'django.contrib.admin',
 ]
 
 MIDDLEWARE = [
@@ -129,3 +130,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
+
+LOGIN_REDIRECT_URL = '/cases'
+LOGIN_URL = '/login'
