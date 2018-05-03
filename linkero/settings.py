@@ -81,7 +81,10 @@ DATABASES = {
         'USER': 'linkero',
         'PASSWORD': '123linkero',
         'HOST': 'localhost',
-        'PORT': ''
+        'PORT': '',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
     }
 }
 
