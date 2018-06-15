@@ -4,7 +4,6 @@ from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Submit, HTML, Button, Row, Field, Fieldset
 from crispy_forms.bootstrap import FormActions
-from bootstrap3_datetime.widgets import DateTimePicker
 
 class CaseFilterForm(forms.Form):
     
@@ -12,14 +11,14 @@ class CaseFilterForm(forms.Form):
         choices = (('ebay', 'eBay'), ('ml', 'MercadoLibre'), ('al', 'Alegro')),
     )
     
-    from_date = forms.DateField(
-        widget=DateTimePicker(options={"format": "YYYY-MM-DD",
-                                       "pickTime": False})
+    from_date = forms.CharField(
+        widget=forms.TextInput(attrs={"class":"form-control date-picker",
+                                      "id" : "start-date"})
     )
     
-    to_date = forms.DateField(
-        widget=DateTimePicker(options={"format": "YYYY-MM-DD",
-                                       "pickTime": False})
+    to_date = forms.CharField(
+        widget=forms.TextInput(attrs={"class" : "form-control date-picker",
+                                        "id" : "end-date"})
     )
     
     helper = FormHelper()

@@ -5,44 +5,83 @@
 
 {% block content %}
 
-<div class="container-fluid text-center">    
-	<div class="row content">
+<div class="row content">
 	
-		<div class="col-sm-1">
+	<div class="col-md-10"><!-- first column on the right -->
+		<div class="row" id="filter">
+			<div class="col-md-10">
+				<!-- crispy form goes here! -->
+			</div>
+		</div>
+		<div class="row" id="cases-list-table">
+			<div class="col-md-10">
+			<table class="table table-striped" id="cases-list">
+				<thead class="text-left">
+					<tr>
+						<th>Query id</th>
+						<th>Platform</th>
+						<th>Date</th>
+						<th>Query</th>
+						<th>Status</th>
+					</tr>
+				</thead>
+				<tbody class="text-left">
+					<tr>
+						<td>0032651</td>
+						<td>eBay</td>
+						<td>02-04-2018</td>
+						<td>Philips</td>
+						<td>completed</td>
+					</tr>
+					<tr>
+						<td>0032653</td>
+						<td>MercadoLibre</td>
+						<td>23-03-2018</td>
+						<td>Bulbs</td>
+						<td>completed</td>
+					</tr>
+					<tr>
+						<td>0032851</td>
+						<td>Alegro</td>
+						<td>10-01-2018</td>
+						<td>Tommy Hilfiger</td>
+						<td>completed</td>
+					</tr>
+					<tr>
+						<td>0032641</td>
+						<td>eBay</td>
+						<td>06-02-2018</td>
+						<td>Apple</td>
+						<td>completed</td>
+					</tr>
+					<tr>
+						<td>0032251</td>
+						<td>eBay</td>
+						<td>07-05-2018</td>
+						<td>Nike</td>
+						<td>completed</td>
+					</tr>
+				</tbody>
+			</table>
+			</div>
 		</div>
 		
-		<div class="col-sm-10">
-			<div class="row" id="filter">
-				{% crispy case_filter_form %}
-			</div>
-			<div class="row" id="table">
-				<table class="table table-striped" id="cases-list">
-					<thead>
-						<tr>
-							<th>Platform</th>
-							<th>Date</th>
-							<th>Query</th>
-							<th>Status</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>ebay</td>
-							<td>02-03-2017</td>
-							<td>Bio Baby Oil</td>
-							<td>completed</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			
-			<div class="row" id="pager">
-			</div>
-			
+		<div class="row" id="pager">
 		</div>
-		<div class="col-sm-1">
-		</div>
-	</div>
-</div>
+		
+	</div><!-- closing first column -->
+	<div class="col-md-2"><!-- second column on the left -->
+		<button type="button" class="btn btn-success" id="new-case-btn" data-toggle="modal" data-target="#first-modal"><span class="glyphicon glyphicon-plus"></span></button>
+	</div><!-- closing second column -->
+</div><!-- closing row content -->
 
+{% endblock %}
+
+{% block domready %}
+<!-- BootStrap DatePicker JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+
+<script>
+	$(".date-picker").datepicker({format: 'dd/mm/yyyy'});
+</script>
 {% endblock %}
