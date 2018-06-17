@@ -12,11 +12,12 @@ class CaseFilterForm(forms.Form):
     )
     
     from_date = forms.CharField(
-        widget=forms.TextInput(attrs={"class":"form-control date-picker",
-                                      "id" : "start-date"})
+        label = "From: ",
+        widget=forms.TextInput()
     )
     
     to_date = forms.CharField(
+        label = "to: ",
         widget=forms.TextInput(attrs={"class" : "form-control date-picker",
                                         "id" : "end-date"})
     )
@@ -24,12 +25,11 @@ class CaseFilterForm(forms.Form):
     helper = FormHelper()
     helper.form_class = 'form-horizontal'
     helper.layout = Layout(
-        'multicolon_select',
-        'from_date',
+        Field('multicolon_select', id="platform", css_class="form-control"),
+        Field('from_date', id="start-date", css_class="form-control date-picker"),
         'to_date',
         FormActions(
-            Submit('save_changes', 'Save changes', css_class="btn-primary"),
-            Submit('cancel', 'Cancel'),
+            Submit('filter', 'Filter', css_class="btn btn-default")
         )
     )
     

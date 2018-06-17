@@ -1,0 +1,30 @@
+/* site.css */
+
+body {
+	height:1500px;
+	font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+	font-size: 14px;
+	line-height: 2;
+}
+
+.navbar-light {
+	background-color: #c5c1c0;
+}
+
+.navbar-brand {
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 24px;
+}
+
+.filter-form-group {
+	padding-right: 20px;
+}
+
+#start-date, #end-date {
+	width: 120px;
+}
+
+#new-case-btn {
+	width: 40px;
+	height: 40px;
+}
