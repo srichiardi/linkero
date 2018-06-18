@@ -26,6 +26,7 @@ class CaseFilterForm(forms.Form):
     )
     
     helper = FormHelper()
+    helper.field_template = 'bootstrap3/layout/inline_field.html'
     helper.form_class = 'form-inline'
     helper.form_method = 'get'
     helper.layout = Layout(
