@@ -30,12 +30,9 @@ class CaseFilterForm(forms.Form):
     helper.form_class = 'form-inline'
     helper.form_method = 'get'
     helper.layout = Layout(
-        Div(
-            Field('select', id="platform", css_class="form-control"),
-            css_class = "form-group"
-            ),
-        Field('from_date', id="start-date", css_class="form-control date-picker"),
-        Field('to_date', id="end-date", css_class="form-control date-picker"),
+        Field('select', id="platform", css_class="form-control", wrapper_class="form-group"),
+        Field('from_date', id="start-date", css_class="form-control date-picker", wrapper_class="form-group"),
+        Field('to_date', id="end-date", css_class="form-control date-picker", wrapper_class="form-group"),
         FormActions(
             Submit('filter', 'Filter', css_class="btn btn-default")
         )
