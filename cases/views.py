@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
 from django.contrib.auth.models import User
-from forms import CaseFilterForm
+from cases.forms import CaseFilterForm
 
 
 # Loading the "cases" page and pull filtered cases.
