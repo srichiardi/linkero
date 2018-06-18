@@ -7,27 +7,31 @@ from crispy_forms.bootstrap import FormActions
 
 class CaseFilterForm(forms.Form):
     
-    multicolon_select = forms.MultipleChoiceField(
-        choices = (('ebay', 'eBay'), ('ml', 'MercadoLibre'), ('al', 'Alegro')),
+    select = forms.ChoiceField(
+        label = "Platform: ",
+        choices = (('eb', 'eBay'), ('ml', 'MercadoLibre'), ('al', 'Alegro')),
+        required = False
     )
     
     from_date = forms.CharField(
         label = "From: ",
-        widget=forms.TextInput()
+        widget=forms.TextInput(),
+        required = False
     )
     
     to_date = forms.CharField(
         label = "to: ",
-        widget=forms.TextInput(attrs={"class" : "form-control date-picker",
-                                        "id" : "end-date"})
+        widget=forms.TextInput(),
+        required = False
     )
     
     helper = FormHelper()
-    helper.form_class = 'form-horizontal'
+    helper.form_class = 'form-inline'
+    helper.form_method = 'get'
     helper.layout = Layout(
-        Field('multicolon_select', id="platform", css_class="form-control"),
+        Field('select', id="platform", css_class="form-control"),
         Field('from_date', id="start-date", css_class="form-control date-picker"),
-        'to_date',
+        Field('to_date', id="end-date", css_class="form-control date-picker"),
         FormActions(
             Submit('filter', 'Filter', css_class="btn btn-default")
         )
