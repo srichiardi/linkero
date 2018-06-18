@@ -34,7 +34,7 @@ class CaseFilterForm(forms.Form):
         Field('from_date', id="start-date", css_class="form-control date-picker", wrapper_class="form-group"),
         Field('to_date', id="end-date", css_class="form-control date-picker", wrapper_class="form-group"),
         FormActions(
-            Submit('filter', 'Filter', css_class="btn btn-default")
+            Submit('filter', 'Filter', css_class="btn btn-default", wrapper_class="form-group")
         )
     )
     
