@@ -5,7 +5,35 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Submit, HTML, Button, Row, Field, Fieldset
 from crispy_forms.bootstrap import FormActions
 
+
 class CaseFilterForm(forms.Form):
+    
+    platform = forms.ChoiceField(
+        label = "Platform: ",
+        choices = (('eb', 'eBay'), ('ml', 'MercadoLibre'), ('al', 'Alegro')),
+        widget = forms.Select(attrs = {"class" : "form-control",
+                                       "id" : "platform"}),
+        required = False
+    )
+    
+    from_date = forms.CharField(
+        label = "From: ",
+        widget = forms.TextInput(attrs = {"class" : "form-control date-picker",
+                                        "id" : "start-date",
+                                        "placeholder" : "dd/mm/yyyy"}),
+        required = False
+    )
+    
+    to_date = forms.CharField(
+        label = "to: ",
+        widget = forms.TextInput(attrs = {"class" : "form-control date-picker",
+                                        "id" : "end-date",
+                                        "placeholder" : "dd/mm/yyyy"}),
+        required = False
+    )
+
+
+class CaseFilterFormOld(forms.Form):
     
     select = forms.ChoiceField(
         label = "Platform: ",
