@@ -31,6 +31,12 @@ class CaseFilterForm(forms.Form):
                                         "placeholder" : "dd/mm/yyyy"}),
         required = False
     )
+    
+    
+class CreateCase(forms.Form):
+    platform = forms.CharField()
+    report_type = forms.CharField()
+    query_title = forms.CharField()
 
 
 class CaseFilterFormOld(forms.Form):
