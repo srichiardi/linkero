@@ -25,10 +25,10 @@ class Cases(models.Model):
         ('r', 'running'),
     )
     query_id = models.AutoField(primary_key=True)
-    platform = models.ForeignKey(Platforms, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    platform = models.ForeignKey(Platforms)
+    user = models.ForeignKey(User)
     creation_date = models.DateTimeField(auto_now_add=True)
-    report_type = models.ForeignKey(Reports, on_delete=models.CASCADE)
-    query_title = models.CharField(max_length=50)
+    report_type = models.ForeignKey(Reports)
+    query_title = models.CharField(max_length=100)
     status = models.CharField(max_length=1, choices=QUERY_STATUS)
     
