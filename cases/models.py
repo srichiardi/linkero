@@ -15,6 +15,7 @@ class Reports(models.Model):
     report_id = models.AutoField(primary_key=True)
     platform = models.ForeignKey(Platforms, on_delete=models.CASCADE)
     report_name = models.CharField(max_length=50)
+    api_key = models.CharField(max_length=100)
     
 
 # Create your models here.

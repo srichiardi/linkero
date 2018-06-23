@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
 
 {% block title %}Cases console{% endblock %}
 
@@ -79,9 +78,39 @@
 		
 	</div><!-- closing first column -->
 	<div class="col-md-2"><!-- second column on the left -->
-		<button type="button" class="btn btn-success" id="new-case-btn" data-toggle="modal" data-target="#first-modal"><span class="glyphicon glyphicon-plus"></span></button>
+		<button type="button" class="btn btn-success" id="new-case-btn" data-toggle="modal" data-target="#ebay-listing-modal"><span class="glyphicon glyphicon-plus"></span></button>
+		<div class="well">
+			<div>
+				<ul class="nav nav-list">
+					<li><label class="tree-toggle nav-header">eBay</label>
+						<ul class="nav nav-list tree">
+							<li><a href="#">Listings</a></li>
+							<li><a href="#">Registration details</a></li>
+						</ul>
+					</li>
+					<li class="divider"></li>
+					<li><label class="tree-toggle nav-header">MercadoLibre</label>
+						<ul class="nav nav-list tree">
+							<li><a href="#">Listings</a></li>
+							<li><a href="#">Registration details</a></li>
+						</ul>
+					</li>
+					<li class="divider"></li>
+					<li><label class="tree-toggle nav-header">Alegro</label>
+						<ul class="nav nav-list tree">
+							<li><a href="#">Listings</a></li>
+							<li><a href="#">Registration details</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div><!-- closing well class -->
 	</div><!-- closing second column -->
 </div><!-- closing row content -->
+
+<!-- Modals -->
+{% include 'cases/ebay_modal_listings.html' %}
+<!-- closing modals -->
 
 {% endblock %}
 
