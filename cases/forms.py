@@ -52,7 +52,7 @@ class EbayListingForm(forms.Form):
         required=False,
         widget=forms.CheckboxSelectMultiple(attrs = {"class" : "form-control",
                                                      "id" : "ebay-sites"}),
-        choices=EBAY_SITES_CHOICES,
+        choices=EBAY_SITES_CHOICES
     )
     
     seller_ids = forms.CharField(required=False,
