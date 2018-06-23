@@ -32,10 +32,10 @@ class CaseFilterForm(forms.Form):
     
 class EbayListingForm(forms.Form):
     EBAY_SITES_CHOICES = (
-        ('us', 'US',
-         'uk', 'UK',
-         'ca', 'Canada',
-         'fr', 'France')
+        ('us', 'US'),
+        ('uk', 'UK'),
+        ('ca', 'Canada'),
+        ('fr', 'France')
     )
     
     platform = forms.CharField(
@@ -50,7 +50,7 @@ class EbayListingForm(forms.Form):
     
     ebay_sites = forms.MultipleChoiceField(
         required=False,
-        widget=forms.SelectMultiple(),
+        widget=forms.CheckboxSelectMultiple(),
         choices=EBAY_SITES_CHOICES
     )
     
