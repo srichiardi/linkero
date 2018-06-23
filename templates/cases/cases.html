@@ -120,5 +120,9 @@
 
 <script>
 	$(".date-picker").datepicker({format: 'dd/mm/yyyy'});
+	$('.tree-toggle').click(function () {
+		$(this).parent().children('ul.tree').toggle(200);
+	});
+	$('.tree-toggle').parent().children('ul.tree').toggle(1000);
 </script>
 {% endblock %}
