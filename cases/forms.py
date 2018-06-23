@@ -49,7 +49,6 @@ class EbayListingForm(forms.Form):
     )
     
     ebay_sites = forms.MultipleChoiceField(
-        required=False,
         widget=forms.CheckboxSelectMultiple(attrs = {"class" : "form-control",
                                                      "id" : "ebay-sites"}),
         choices=EBAY_SITES_CHOICES
