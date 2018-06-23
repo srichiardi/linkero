@@ -26,7 +26,7 @@ class Cases(models.Model):
         ('r', 'running'),
     )
     query_id = models.AutoField(primary_key=True)
-    platform = models.ForeignKey(Platforms)
+    platform = models.ForeignKey(Platforms, on_delete=models.DO_NOTHING)
     user = models.ForeignKey(User)
     creation_date = models.DateTimeField(auto_now_add=True)
     report_type = models.ForeignKey(Reports)
