@@ -31,12 +31,8 @@ class CaseFilterForm(forms.Form):
     
     
 class EbayListingForm(forms.Form):
-    EBAY_SITES_CHOICES = (
-        ('us', 'US'),
-        ('uk', 'UK'),
-        ('ca', 'Canada'),
-        ('fr', 'France')
-    )
+    
+    EBAY_SITES_CHOICES = ((key, key['name']) for key in globalSiteMap.keys().sort())
     
     platform = forms.CharField(
         widget = forms.HiddenInput(attrs={"id" : "platform_name",
