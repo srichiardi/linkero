@@ -2,20 +2,15 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Platforms(models.Model):
-    PLATFORMS = (
-        ('eb', 'eBay'),
-        ('ml', 'MercadoLibre'),
-        ('al', 'Alegro')
-    )
     platform_id = models.AutoField(primary_key=True)
     platform_name = models.CharField(max_length=50)
+    api_key = models.CharField(max_length=100)
     
     
 class Reports(models.Model):
     report_id = models.AutoField(primary_key=True)
     platform = models.ForeignKey(Platforms, on_delete=models.CASCADE)
     report_name = models.CharField(max_length=50)
-    api_key = models.CharField(max_length=100)
     
 
 # Create your models here.
