@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
 from django.contrib.auth.models import User
 from cases.forms import CaseFilterForm, EbayListingForm
+from cases.models import Reports
 
 
 # Loading the "cases" page and pull filtered cases.

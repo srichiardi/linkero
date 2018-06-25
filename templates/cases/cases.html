@@ -78,13 +78,12 @@
 		
 	</div><!-- closing first column -->
 	<div class="col-md-2"><!-- second column on the left -->
-		<button type="button" class="btn btn-success" id="new-case-btn" data-toggle="modal" data-target="#ebay-listing-modal"><span class="glyphicon glyphicon-plus"></span></button>
 		<div class="well">
 			<div>
 				<ul class="nav nav-list">
 					<li><label class="tree-toggle nav-header">eBay</label>
 						<ul class="nav nav-list tree">
-							<li><a href="#">Listings</a></li>
+							<li><a data-target="#ebay-listing-modal" data-toggle="modal" href="#ebay-listing-modal">Listings</a></li>
 							<li><a href="#">Registration details</a></li>
 						</ul>
 					</li>
@@ -100,6 +99,14 @@
 						<ul class="nav nav-list tree">
 							<li><a href="#">Listings</a></li>
 							<li><a href="#">Registration details</a></li>
+						</ul>
+					</li>
+					<li class="divider"></li>
+					<li><label class="tree-toggle nav-header">Facebook</label>
+						<ul class="nav nav-list tree">
+							<li><a href="#">Places</a></li>
+							<li><a href="#">Friends</a></li>
+							<li><a href="#">Likes</a></li>
 						</ul>
 					</li>
 				</ul>

@@ -7,12 +7,20 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">eBay listings query</h4>
       </div>
-      <div class="modal-body">
+      <div class="modal-body clearfix">
         <p>Listings query.</p>
         		<form role="form" method="post" id="ebay-listing-form" action="">
+        		<div class="row" id="inputs-row">
         		<div class="col-md-6">
         			<div class="form-group">
-						{{ ebay_listing_form.ebay_sites.label_tag }}{{ ebay_listing_form.ebay_sites }}
+						<label for="ebay-sites">eBay sites:</label>
+						<div id="ebay-sites">
+						{% for checkbox in ebay_listing_form.ebay_sites %}
+							<div class="col-md-4">
+								{{ checkbox.choice_label }}<span>{{ checkbox }}</span>
+        					</div>
+        				{% endfor %}
+						</div>
 					</div>
 				</div>
 				<div class="col-md-6">
@@ -29,8 +37,17 @@
 						{{ ebay_listing_form.send_to_email.label_tag }}{{ ebay_listing_form.send_to_email }}
 					</div>
 				</div>
-
-					<button type="submit" class="btn btn-success btn-block">Create</button>
+				</div>
+				<div class="row" id="buttons-row">
+					<div class="col-md-6" id="sites-buttons">
+						<button type="button" class="btn">EU only</button>
+						<button type="button" class="btn">Clear all</button>
+						<button type="button" class="btn">Select all</button>
+					</div>
+					<div class="col-md-6" id="sites-buttons">
+						<button type="submit" class="btn btn-primary">Create</button>
+					</div>
+				</div>
 				</form>
 
       </div>
