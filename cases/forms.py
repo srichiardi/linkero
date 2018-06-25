@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 from django import forms
+from cases.models import Platforms, Reports
 from cases.ebaySettings import globalSiteMap
 
 
 class CaseFilterForm(forms.Form):
     
+    PLATFORM_CHOICES = ( (plt.id, plt.name) for plt in Platforms.objects.all() )
+    
     platform = forms.ChoiceField(
         label = "Platform",
-        choices = (('ebay', 'eBay'), ('mercadolibre', 'MercadoLibre'), ('alegro', 'Alegro')),
+        choices = PLATFORM_CHOICES,
         widget = forms.Select(attrs = {"class" : "form-control",
                                        "id" : "platform"}),
         required = False

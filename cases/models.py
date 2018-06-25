@@ -2,8 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Platforms(models.Model):
-    platform_id = models.AutoField(primary_key=True)
-    platform_name = models.CharField(max_length=50)
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=50)
     api_key = models.CharField(max_length=100)
     
     
