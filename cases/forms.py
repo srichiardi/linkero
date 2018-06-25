@@ -56,15 +56,17 @@ class EbayListingForm(forms.Form):
     seller_ids = forms.CharField(required=False,
                                  label="Seller ids",
                                  widget=forms.Textarea(attrs = {"class" : "form-control",
-                                                                "id" : "ebay-seller-id"}))
+                                                                "id" : "ebay-seller-id",
+                                                                "rows" : "5"}))
     
     keywords = forms.CharField(required=False,
                                label="Keywords",
                                widget=forms.Textarea(attrs = {"class" : "form-control",
-                                                              "id" : "ebay-item-keywords"}))
+                                                              "id" : "ebay-item-keywords",
+                                                              "rows" : "5"}))
     
     desc_search = forms.ChoiceField(required=False,
-                                    label="search in description",
+                                    label="Search in description",
                                     widget=forms.CheckboxInput(attrs = {"class" : "form-control",
                                                                         "id" : "desc-search"}))
     

@@ -14,13 +14,13 @@
         		<div class="col-md-6">
         			<div class="form-group">
 						<label for="ebay-sites">eBay sites:</label>
-						<div id="ebay-sites">
+						<ul class="list-inline" id="ebay-sites">
 						{% for checkbox in ebay_listing_form.ebay_sites %}
-							<div class="col-md-4">
+							<li class="col-md-4">
 								{{ checkbox }}
-        					</div>
+        					</li>
         				{% endfor %}
-						</div>
+						</ul>
 					</div>
 				</div>
 				<div class="col-md-6">
