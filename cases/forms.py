@@ -57,13 +57,13 @@ class EbayListingForm(forms.Form):
                                  label="Seller ids",
                                  widget=forms.Textarea(attrs = {"class" : "form-control",
                                                                 "id" : "ebay-seller-id",
-                                                                "rows" : "5"}))
+                                                                "rows" : 5}))
     
     keywords = forms.CharField(required=False,
                                label="Keywords",
                                widget=forms.Textarea(attrs = {"class" : "form-control",
                                                               "id" : "ebay-item-keywords",
-                                                              "rows" : "5"}))
+                                                              "rows" : 5}))
     
     desc_search = forms.ChoiceField(required=False,
                                     label="Search in description",
