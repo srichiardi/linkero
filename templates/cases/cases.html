@@ -10,7 +10,7 @@
 		<div class="row" id="filter">
 			<div class="col-md-10">
 				<!-- form goes here! -->
-				<form role="form" id="case_filter_form" class="form-inline" action="" method="get">
+				<form role="form" id="case-filter-form" class="form-inline" action="" method="get">
 					{% for field in case_filter_form %}
 					<div class="form-group filter-form-group">
 						{{ field.label_tag }}{{ field }}
@@ -127,9 +127,63 @@
 
 <script>
 	$(".date-picker").datepicker({format: 'dd/mm/yyyy'});
+	
 	$('.tree-toggle').click(function () {
 		$(this).parent().children('ul.tree').toggle(200);
 	});
+	
 	$('.tree-toggle').parent().children('ul.tree').toggle(1000);
+	
+	// load the table function
+	function get_cases() {
+		var data = $('#case-filter-form').serialize();
+		$.get(
+				'{% url "caseslist" %}',
+				data,
+				function(response) {
+					if (response['status'] == 'success') {
+						// place cases in a table
+						var $casestable = $("#cases-list");
+						// clean all table content
+						$casestable.children('tbody').empty();
+						// populate the table with cases
+						for ( i = 0; i < response["cases-list"].length; i++ ) {
+							var row = '<tr>';
+							row += '<td>' + response["cases-list"][i]['query_id'] + '</td>';
+							row += '<td>' + response["cases-list"][i]['platform'] + '</td>';
+							row += '<td>' + response["cases-list"][i]['date'] + '</td>';
+							row += '<td>' + response["cases-list"][i]['query_title'] + '</td>';
+							row += '<td>' + response["cases-list"][i]['query_status'] + '</td>';
+							row += '</tr>';
+							$casestable.children('tbody').append(row);
+						};
+					} else {
+						// print error message
+					}
+				}
+		);
+	};
+	
+	// post a case with ajax
+	$('#ebay-listing-form').submit(function(event) {
+		event.preventDefault();
+		console.log("form submitted!");  // sanity check
+		var data = $('#ebay-listing-form').serialize();
+		$.post(
+				'{% url "cases" %}',
+				data,
+				function(response){
+					if (response['status'] == 'success') {
+						// close modal
+						// reload table
+						get_cases();
+					} else {
+						// print error message in the modal
+					};
+				}
+		);
+	});
+	
+	
 </script>
 {% endblock %}
