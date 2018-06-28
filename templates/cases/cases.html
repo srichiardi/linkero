@@ -138,7 +138,7 @@
 	function get_cases() {
 		var data = $('#case-filter-form').serialize();
 		$.get(
-				'{% url "caseslist" %}',
+				'{% url "cases" %}',
 				data,
 				function(response) {
 					if (response['status'] == 'success') {

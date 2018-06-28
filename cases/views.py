@@ -3,7 +3,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
 from django.contrib.auth.models import User
 from cases.forms import CaseFilterForm, EbayListingForm
-from cases.models import Reports
+from cases.models import Cases, Reports
+from datetime import datetime, timedelta
+from django.http import JsonResponse
 
 
 # Loading the "cases" page and pull filtered cases.
@@ -14,7 +16,29 @@ class Cases(LoginRequiredMixin, View):
             form = CaseFilterForm(request.GET)
             if form.is_valid():
                 # query the cases table for cases of the user created between dates of one platform
-                pass
+                if form.cleaned_data['from_date'] == "":
+                    # set the date 2 weeks before
+                    from_datetime = datetime.now()- timedelta(days=15)
+                else:
+                    from_datetime = datetime.strptime(form.cleaned_data['from_date'], '%d/%m/%Y')
+                    
+                if form.cleaned_data['to_date'] == "":
+                    to_datetime = datetime.now()
+                else:
+                    to_datetime = datetime.strptime(form.cleaned_data['to_date'], '%d/%m/%Y')
+                    
+                # making sure from date is always greater than to_date
+                if to_datetime < from_datetime:
+                    to_datetime = from_datetime + timedelta(days=1)
+                    
+                case_list = Cases.objects.filter(user=request.user,
+                                                  platform=form.cleaned_data['platform'],
+                                                  creation_date__gte=from_datetime,
+                                                  creation_date__lte=to_datetime).order_by('-query_id')
+                return JsonResponse({'status' : 'success',
+                                     'case_list' : case_list
+                                     }, safe=False)
+                    
         else:
             params = {}
             params['case_filter_form'] = CaseFilterForm()
