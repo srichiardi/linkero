@@ -49,4 +49,18 @@ class Cases(LoginRequiredMixin, View):
         if request.is_ajax():
             form = EbayListingForm(request.POST)
             if form.is_valid():
-                pass
+                q_title = form.cleaned_data['keywords'] + form.cleaned_data['seller_ids']
+                case = Cases(
+                    user = request.user,
+                    platform = form.cleaned_data['platform'],
+                    report_type = Reports.objects.filter(report_name = form.cleaned_data['report_type']),
+                    query_title = q_title,
+                    status = 'r')
+                case.save()
+                return JsonResponse({'status' : 'success'})
+                
+            
+            
+            
+            
+            
