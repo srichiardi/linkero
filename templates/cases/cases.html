@@ -136,6 +136,7 @@
 	
 	// load the table function
 	function get_cases() {
+		event.preventDefault();
 		var data = $('#case-filter-form').serialize();
 		$.get(
 				'{% url "cases" %}',
