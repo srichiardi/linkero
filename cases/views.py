@@ -60,7 +60,7 @@ class CasesView(LoginRequiredMixin, View):
                 q_title = form.cleaned_data['keywords'] + form.cleaned_data['seller_ids']
                 case = Cases(
                     user = request.user,
-                    platform = form.cleaned_data['platform'],
+                    platform = Platforms.objects.get(id=form.cleaned_data['platform']),
                     report_type = Reports.objects.filter(report_name = form.cleaned_data['report_type']),
                     query_title = q_title,
                     status = 'r')
