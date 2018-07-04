@@ -7,7 +7,7 @@ from cases.ebaySettings import globalSiteMap
 class CaseFilterForm(forms.Form):
     
     PLATFORM_CHOICES = ( (plt.id, plt.name) for plt in Platforms.objects.all() )
-#    PLATFORM_CHOICES = ( ( '1', 'ebay'), ('2', 'MercadoLibre'), ('3', 'alegro') )
+    
     platform = forms.ChoiceField(
         label = "Platform",
         choices = PLATFORM_CHOICES,
@@ -39,7 +39,7 @@ class EbayListingForm(forms.Form):
     
     platform = forms.CharField(
         widget = forms.HiddenInput(attrs={"id" : "platform_name",
-                                          "value" : "ebay"})
+                                          "value" : "1"})
     )
     
     report_type = forms.CharField(

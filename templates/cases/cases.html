@@ -147,13 +147,13 @@
 						// clean all table content
 						$casestable.children('tbody').empty();
 						// populate the table with cases
-						for ( i = 0; i < response["cases-list"].length; i++ ) {
+						for ( i = 0; i < response["case_list"].length; i++ ) {
 							var row = '<tr>';
-							row += '<td>' + response["cases-list"][i]['query_id'] + '</td>';
-							row += '<td>' + response["cases-list"][i]['platform'] + '</td>';
-							row += '<td>' + response["cases-list"][i]['date'] + '</td>';
-							row += '<td>' + response["cases-list"][i]['query_title'] + '</td>';
-							row += '<td>' + response["cases-list"][i]['query_status'] + '</td>';
+							row += '<td>' + response["case_list"][i]['query_id'] + '</td>';
+							row += '<td>' + response["case_list"][i]['platform_id'] + '</td>';
+							row += '<td>' + response["case_list"][i]['creation_date'] + '</td>';
+							row += '<td>' + response["case_list"][i]['query_title'] + '</td>';
+							row += '<td>' + response["case_list"][i]['status'] + '</td>';
 							row += '</tr>';
 							$casestable.children('tbody').append(row);
 						};
