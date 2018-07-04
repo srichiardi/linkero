@@ -6,6 +6,7 @@ from cases.forms import CaseFilterForm, EbayListingForm
 from cases.models import Cases, Reports
 from datetime import datetime, timedelta
 from django.http import JsonResponse
+from pyexpat import errors
 
 
 # Loading the "cases" page and pull filtered cases.
@@ -64,10 +65,17 @@ class Cases(LoginRequiredMixin, View):
                     status = 'r')
                 case.save()
                 return JsonResponse({'status' : 'success'})
+            
             # if form is invalid
             else:
+                form_errors = {}
+                for field, errors in form.errors.items():
+                    form_errors[field] = []
+                    for error in errors:
+                        form_errors[field].append(error)
+                    
                 return JsonResponse({'status' : 'fail',
-                                     'form' : dict(form)}, safe=False)
+                                     'form' : form_errors})
                 
             
             
