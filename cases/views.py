@@ -36,10 +36,11 @@ class Cases(LoginRequiredMixin, View):
 #                                                   platform=form.cleaned_data['platform'],
 #                                                   creation_date__gte=from_datetime,
 #                                                   creation_date__lte=to_datetime).order_by('-query_id')
-                case_list = Cases.objects.all()
+                case_list = Cases()
+                
                                                   
                 return JsonResponse({'status' : 'success',
-                                     'case_list' : case_list
+                                     'case_type' : type(case_list)
                                      }, safe=False)
             # if form is invalid
             else:
