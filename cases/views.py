@@ -54,7 +54,7 @@ class Cases(LoginRequiredMixin, View):
         
     def post(self, request):
         if request.is_ajax():
-            form = EbayListingForm(request.POST)
+            form = EbayListingForm(request.POST['ebay-listing-form'])
             if form.is_valid():
                 q_title = form.cleaned_data['keywords'] + form.cleaned_data['seller_ids']
                 case = Cases(
@@ -68,14 +68,7 @@ class Cases(LoginRequiredMixin, View):
             
             # if form is invalid
             else:
-                form_errors = {}
-                for field, errors in form.errors.items():
-                    form_errors[field] = []
-                    for error in errors:
-                        form_errors[field].append(error)
-                    
-                return JsonResponse({'status' : 'fail',
-                                     'form' : form_errors})
+                return JsonResponse({'status' : 'fail'})
                 
             
             
