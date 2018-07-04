@@ -23,3 +23,7 @@ class Cases(models.Model):
     query_title = models.CharField(max_length=100)
     status = models.CharField(max_length=10)
     
+    @property
+    def cre_date_formatted(self):
+        return self.creation_date.strftime('%d-%m-%Y %H:%M')
+    

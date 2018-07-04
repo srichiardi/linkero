@@ -38,7 +38,7 @@ class CasesView(LoginRequiredMixin, View):
                                                   creation_date__lte=to_datetime)\
                                                   .select_related('platform', 'report_type')\
                                                   .order_by('-query_id')\
-                                                  .values('query_id','platform__name','creation_date','query_title','status',
+                                                  .values('query_id','platform__name','cre_date_formatted','query_title','status',
                                                           'report_type__report_name')
                 
                 serialized_cases = list(cases_queryset)
@@ -53,10 +53,10 @@ class CasesView(LoginRequiredMixin, View):
         # if request is not ajax
         else:
             listing_form = EbayListingForm()
-            listing_form.send_to_email.default = request.user.email
+            listing_form.fields['send_to_email'].initial = request.user.email
             params = {}
             params['case_filter_form'] = CaseFilterForm()
-            params['ebay_listing_form'] = EbayListingForm()
+            params['ebay_listing_form'] = listing_form
             return render(request, 'cases/cases.html', params)
         
     def post(self, request):
