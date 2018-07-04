@@ -39,7 +39,7 @@ class EbayListingForm(forms.Form):
     
     platform = forms.CharField(
         widget = forms.HiddenInput(attrs={"id" : "platform_name",
-                                          "value" : "1"})
+                                          "value" : 1})
     )
     
     report_type = forms.CharField(
