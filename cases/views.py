@@ -44,7 +44,7 @@ class Cases(LoginRequiredMixin, View):
                                      'form' : form
                                      }, safe=False)
                 
-                    
+        # if request is not ajax
         else:
             params = {}
             params['case_filter_form'] = CaseFilterForm()
@@ -67,7 +67,7 @@ class Cases(LoginRequiredMixin, View):
             # if form is invalid
             else:
                 return JsonResponse({'status' : 'fail',
-                                     'form' : form}, safe=False)
+                                     'form' : dict(form)}, safe=False)
                 
             
             
