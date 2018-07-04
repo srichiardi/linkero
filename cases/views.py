@@ -10,7 +10,7 @@ from pyexpat import errors
 
 
 # Loading the "cases" page and pull filtered cases.
-class Cases(LoginRequiredMixin, View):
+class CasesView(LoginRequiredMixin, View):
     
     def get(self, request):
         if request.is_ajax():

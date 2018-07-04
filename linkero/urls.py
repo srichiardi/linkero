@@ -22,5 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^login/$', login, name='login', kwargs={'redirect_authenticated_user': True}),
     re_path(r'^logout/$', logout, name='logout'),
-    re_path(r'^cases/', include('cases.urls')),
+    re_path(r'^$', include('cases.urls')),
 ]
