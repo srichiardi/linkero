@@ -68,8 +68,3 @@ class Cases(LoginRequiredMixin, View):
             else:
                 return JsonResponse({'status' : 'fail'})
                 
-            
-            
-            
-            
-            

@@ -136,7 +136,6 @@
 	
 	// load the table function
 	function get_cases() {
-		event.preventDefault();
 		var data = $('#case-filter-form').serialize();
 		$.get(
 				'{% url "cases" %}',
@@ -164,6 +163,12 @@
 				}
 		);
 	};
+	
+	// GET cases request
+	$('#case-filter-form').submit(function(event) {
+		event.preventDefault();
+		get_cases();
+	});
 	
 	// post a case with ajax
 	$('#ebay-listing-form').submit(function(event) {
