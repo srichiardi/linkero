@@ -44,7 +44,7 @@ class EbayListingForm(forms.Form):
     
     report_type = forms.CharField(
         widget = forms.HiddenInput(attrs={"id" : "report_type",
-                                          "value" : "listings"})
+                                          "value" : 1})
     )
     
     ebay_sites = forms.MultipleChoiceField(

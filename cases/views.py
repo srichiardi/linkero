@@ -52,6 +52,8 @@ class CasesView(LoginRequiredMixin, View):
                 
         # if request is not ajax
         else:
+            listing_form = EbayListingForm()
+            listing_form.send_to_email.default = request.user.email
             params = {}
             params['case_filter_form'] = CaseFilterForm()
             params['ebay_listing_form'] = EbayListingForm()
@@ -65,9 +67,9 @@ class CasesView(LoginRequiredMixin, View):
                 case = Cases(
                     user = request.user,
                     platform = Platforms.objects.get(id=form.cleaned_data['platform']),
-                    report_type = Reports.objects.filter(report_name = form.cleaned_data['report_type']),
+                    report_type = Reports.objects.get(report_id = form.cleaned_data['report_type']),
                     query_title = q_title,
-                    status = 'r')
+                    status = 'running')
                 case.save()
                 return JsonResponse({'status' : 'success'})
             
