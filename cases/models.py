@@ -15,16 +15,11 @@ class Reports(models.Model):
  
 # Create your models here.
 class Cases(models.Model):
-    QUERY_STATUS = (
-        ('c', 'completed'),
-        ('f', 'failed'),
-        ('r', 'running'),
-    )
     query_id = models.AutoField(primary_key=True)
     platform = models.ForeignKey(Platforms, on_delete=models.DO_NOTHING)
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     creation_date = models.DateTimeField(auto_now_add=True)
     report_type = models.ForeignKey(Reports, on_delete=models.DO_NOTHING)
     query_title = models.CharField(max_length=100)
-    status = models.CharField(max_length=1, choices=QUERY_STATUS)
+    status = models.CharField(max_length=10)
     

@@ -150,7 +150,7 @@
 						for ( i = 0; i < response["case_list"].length; i++ ) {
 							var row = '<tr>';
 							row += '<td>' + response["case_list"][i]['query_id'] + '</td>';
-							row += '<td>' + response["case_list"][i]['platform_id'] + '</td>';
+							row += '<td>' + response["case_list"][i]['platform__name'] + '</td>';
 							row += '<td>' + response["case_list"][i]['creation_date'] + '</td>';
 							row += '<td>' + response["case_list"][i]['query_title'] + '</td>';
 							row += '<td>' + response["case_list"][i]['status'] + '</td>';
