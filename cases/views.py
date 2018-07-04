@@ -36,9 +36,10 @@ class CasesView(LoginRequiredMixin, View):
                                                   platform=form.cleaned_data['platform'],
                                                   creation_date__gte=from_datetime,
                                                   creation_date__lte=to_datetime)\
-                                                  .select_related('platform')\
+                                                  .select_related('platform', 'report_type')\
                                                   .order_by('-query_id')\
-                                                  .values('query_id','platform__name','creation_date','query_title','status')
+                                                  .values('query_id','platform__name','creation_date','query_title','status',
+                                                          'report_type__report_name')
                 
                 serialized_cases = list(cases_queryset)
                                                   
