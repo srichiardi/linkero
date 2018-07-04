@@ -69,5 +69,12 @@ class Cases(LoginRequiredMixin, View):
             
             # if form is invalid
             else:
-                return JsonResponse({'status' : 'fail'})
+                error_dict = {}
+                for field, errors in form.items():
+                    error_dict[field] = []
+                    for error in errors:
+                        error_dict[field].append(error)
+                        
+                return JsonResponse({'status' : 'fail',
+                                     'errors' : error_dict})
                 
