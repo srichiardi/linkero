@@ -65,11 +65,11 @@ class EbayListingForm(forms.Form):
                                                               "id" : "ebay-item-keywords",
                                                               "rows" : 5}))
     
-    desc_search = forms.ChoiceField(required=False,
+    desc_search = forms.BooleanField(required=False,
                                     label="Search in description",
                                     widget=forms.CheckboxInput(attrs = {"class" : "form-control",
-                                                                        "id" : "desc-search"}),
-                                    choices=(( '0', 'search'), ('2', 'dont_search')))
+                                                                        "id" : "desc-search"})
+                                     )
     
     send_to_email = forms.EmailField(required=True,
                                      label="Delivery email",
