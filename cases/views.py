@@ -42,9 +42,11 @@ class CasesView(LoginRequiredMixin, View):
                                                           'report_type__report_name')
                 
                 serialized_cases = list(cases_queryset)
+                ebay_sites_list = form.cleaned_data['ebay_sites']
                                                   
                 return JsonResponse({'status' : 'success',
-                                     'case_list' : serialized_cases
+                                     'case_list' : serialized_cases,
+                                     'ebay_sites' : ebay_sites_list
                                      })
             # if form is invalid
             else:
