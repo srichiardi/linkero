@@ -35,7 +35,10 @@ class CasesView(LoginRequiredMixin, View):
                 cases_queryset = Cases.objects.filter(user=request.user,
                                                   platform=form.cleaned_data['platform'],
                                                   creation_date__gte=from_datetime,
-                                                  creation_date__lte=to_datetime).select_related('platform').order_by('-query_id').values()
+                                                  creation_date__lte=to_datetime)\
+                                                  .select_related('platform')\
+                                                  .order_by('-query_id')\
+                                                  .values('query_id','platform__name','creation_date','query_title','status')
                 
                 serialized_cases = list(cases_queryset)
                                                   
