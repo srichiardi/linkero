@@ -38,6 +38,12 @@ class Cases(LoginRequiredMixin, View):
                 return JsonResponse({'status' : 'success',
                                      'case_list' : case_list
                                      }, safe=False)
+            # if form is invalid
+            else:
+                return JsonResponse({'status' : 'fail',
+                                     'form' : form
+                                     }, safe=False)
+                
                     
         else:
             params = {}
@@ -58,6 +64,10 @@ class Cases(LoginRequiredMixin, View):
                     status = 'r')
                 case.save()
                 return JsonResponse({'status' : 'success'})
+            # if form is invalid
+            else:
+                return JsonResponse({'status' : 'fail',
+                                     'form' : form}, safe=False)
                 
             
             
