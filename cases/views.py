@@ -32,15 +32,14 @@ class CasesView(LoginRequiredMixin, View):
                 if to_datetime < from_datetime:
                     to_datetime = from_datetime + timedelta(days=1)
                     
-#                 case_list = Cases.objects.filter(user=request.user,
-#                                                   platform=form.cleaned_data['platform'],
-#                                                   creation_date__gte=from_datetime,
-#                                                   creation_date__lte=to_datetime).order_by('-query_id')
-                case_list = Cases()
-                case_type = str(type(case_list))
+                case_list = Cases.objects.filter(user=request.user,
+                                                  platform=form.cleaned_data['platform'],
+                                                  creation_date__gte=from_datetime,
+                                                  creation_date__lte=to_datetime).order_by('-query_id')
+
                                                   
                 return JsonResponse({'status' : 'success',
-                                     'case_type' : case_type
+                                     'case_list' : case_list
                                      })
             # if form is invalid
             else:
