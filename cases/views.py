@@ -32,18 +32,19 @@ class CasesView(LoginRequiredMixin, View):
                 if to_datetime < from_datetime:
                     to_datetime = from_datetime + timedelta(days=1)
                     
-                case_list = Cases.objects.filter(user=request.user,
+                cases_queryset = Cases.objects.filter(user=request.user,
                                                   platform=form.cleaned_data['platform'],
                                                   creation_date__gte=from_datetime,
                                                   creation_date__lte=to_datetime).order_by('-query_id')
-
+                
+                serialized_cases = list(cases_queryset)
                                                   
                 return JsonResponse({'status' : 'success',
-                                     'case_list' : case_list
+                                     'case_list' : serialized_cases
                                      })
             # if form is invalid
             else:
-                return JsonResponse({'status' : 'fail'}, safe=False)
+                return JsonResponse({'status' : 'fail'})
                 
         # if request is not ajax
         else:
