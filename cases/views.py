@@ -36,6 +36,7 @@ class Cases(LoginRequiredMixin, View):
                                                   platform=form.cleaned_data['platform'],
                                                   creation_date__gte=from_datetime,
                                                   creation_date__lte=to_datetime).order_by('-query_id')
+                                                  
                 return JsonResponse({'status' : 'success',
                                      'case_list' : case_list
                                      }, safe=False)
