@@ -41,9 +41,7 @@ class Cases(LoginRequiredMixin, View):
                                      }, safe=False)
             # if form is invalid
             else:
-                return JsonResponse({'status' : 'fail',
-                                     'form' : form
-                                     }, safe=False)
+                return JsonResponse({'status' : 'fail'}, safe=False)
                 
         # if request is not ajax
         else:
