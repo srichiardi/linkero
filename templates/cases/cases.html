@@ -169,7 +169,8 @@
 	$('#ebay-listing-form').submit(function(event) {
 		event.preventDefault();
 		console.log("form submitted!");  // sanity check
-		var data = $('#ebay-listing-form').serialize();
+		//var data = $('#ebay-listing-form').serialize(); // trying without serialization
+		var data = $('#ebay-listing-form');
 		$.post(
 				'{% url "cases" %}',
 				data,

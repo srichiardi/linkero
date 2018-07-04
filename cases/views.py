@@ -54,7 +54,7 @@ class Cases(LoginRequiredMixin, View):
         
     def post(self, request):
         if request.is_ajax():
-            form = EbayListingForm(request.POST['ebay-listing-form'])
+            form = EbayListingForm(request.POST)
             if form.is_valid():
                 q_title = form.cleaned_data['keywords'] + form.cleaned_data['seller_ids']
                 case = Cases(
