@@ -1,0 +1,10 @@
+{% for case in cases %}
+<tr>
+	<td>{{ cases_list.query_id }}</td>
+	<td>{{ cases_list.platform__name }}</td>
+	<td>{{ cases_list.creation_date|date:"d/m/Y H:i" }}</td>
+	<td>{{ cases_list.query_title }}</td>
+	<td>{{ cases_list.report_type__report_name }}</td>
+	<td>{{ cases_list.status }}</td>
+</tr>
+{% endfor %}

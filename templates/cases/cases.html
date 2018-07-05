@@ -34,46 +34,7 @@
 					</tr>
 				</thead>
 				<tbody class="text-left">
-					<tr>
-						<td>0032651</td>
-						<td>eBay</td>
-						<td>02-04-2018</td>
-						<td>Philips</td>
-						<td>Listings</td>
-						<td>completed</td>
-					</tr>
-					<tr>
-						<td>0032653</td>
-						<td>MercadoLibre</td>
-						<td>23-03-2018</td>
-						<td>Bulbs</td>
-						<td>Listings</td>
-						<td>completed</td>
-					</tr>
-					<tr>
-						<td>0032851</td>
-						<td>Alegro</td>
-						<td>10-01-2018</td>
-						<td>Tommy Hilfiger</td>
-						<td>Listings</td>
-						<td>completed</td>
-					</tr>
-					<tr>
-						<td>0032641</td>
-						<td>eBay</td>
-						<td>06-02-2018</td>
-						<td>Apple</td>
-						<td>Listings</td>
-						<td>completed</td>
-					</tr>
-					<tr>
-						<td>0032251</td>
-						<td>eBay</td>
-						<td>07-05-2018</td>
-						<td>Nike</td>
-						<td>Listings</td>
-						<td>completed</td>
-					</tr>
+
 				</tbody>
 			</table>
 			</div>
@@ -135,7 +96,7 @@
 	$(".date-picker").datepicker({format: 'dd/mm/yyyy'});
 	
 	$('.tree-toggle').click(function () {
-		$(this).parent().children('ul.tree').toggle(200);
+		$(this).parent().children('ul.tree').toggle(500);
 	});
 	
 	$('.tree-toggle').parent().children('ul.tree').toggle(1000);
@@ -148,24 +109,12 @@
 				data,
 				function(response) {
 					if (response['status'] == 'success') {
-						// place cases in a table
-						var $casestable = $("#cases-list");
 						// clean all table content
-						$casestable.children('tbody').empty();
+						$("#cases-list").children('tbody').empty();
 						// populate the table with cases
-						for ( i = 0; i < response["case_list"].length; i++ ) {
-							var row = '<tr>';
-							row += '<td>' + response["case_list"][i]['query_id'] + '</td>';
-							row += '<td>' + response["case_list"][i]['platform__name'] + '</td>';
-							row += '<td>' + response["case_list"][i]['creation_date'] + '</td>';
-							row += '<td>' + response["case_list"][i]['query_title'] + '</td>';
-							row += '<td>' + response["case_list"][i]['report_type__report_name'] + '</td>';
-							row += '<td>' + response["case_list"][i]['status'] + '</td>';
-							row += '</tr>';
-							$casestable.children('tbody').append(row);
-						};
+						$casestable.children('tbody').append(response["case_list"]);
 					} else {
-						// print error message
+						// print error message in one single cell spanning all columns
 					}
 				}
 		);

@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
 from django.contrib.auth.models import User
+from django.template.loader import render_to_string
 from cases.forms import CaseFilterForm, EbayListingForm
 from cases.models import Cases, Reports, Platforms
 from datetime import datetime, timedelta
@@ -41,10 +42,11 @@ class CasesView(LoginRequiredMixin, View):
                                                   .values('query_id','platform__name','creation_date','query_title','status',
                                                           'report_type__report_name')
                 
-                serialized_cases = list(cases_queryset)
+                #serialized_cases = list(cases_queryset)
+                cases_table = render_to_string('cases/cases_table.html', {'cases_list' : cases_queryset})
                                                   
                 return JsonResponse({'status' : 'success',
-                                     'case_list' : serialized_cases
+                                     'case_list' : cases_table
                                      })
             # if form is invalid
             else:
