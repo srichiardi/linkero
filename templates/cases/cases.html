@@ -112,7 +112,7 @@
 						// clean all table content
 						$("#cases-list").children('tbody').empty();
 						// populate the table with cases
-						$casestable.children('tbody').append(response["case_list"]);
+						$("#cases-list").children('tbody').append(response["case_list"]);
 					} else {
 						// print error message in one single cell spanning all columns
 					}
@@ -144,6 +144,10 @@
 					};
 				}
 		);
+	});
+	
+	$(document).ready(function() {
+		get_cases();
 	});
 	
 	
