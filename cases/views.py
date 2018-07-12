@@ -8,6 +8,7 @@ from cases.models import Cases, Reports, Platforms
 from datetime import datetime, timedelta
 from django.http import JsonResponse
 from pyexpat import errors
+from cases.tasks import send_report
 
 
 # Loading the "cases" page and pull filtered cases.
@@ -74,6 +75,7 @@ class CasesView(LoginRequiredMixin, View):
                     status = 'running')
                 case.save()
                 ebay_sites_list = form.cleaned_data['ebay_sites']
+                send_report()
                 return JsonResponse({'status' : 'success',
                                      'ebay_sites' : ebay_sites_list})
             
