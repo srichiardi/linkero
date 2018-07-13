@@ -33,9 +33,15 @@ class CasesView(LoginRequiredMixin, View):
                 # making sure from date is always greater than to_date
                 if to_datetime < from_datetime:
                     to_datetime = from_datetime + timedelta(days=1)
+                
+                pltfm = form.cleaned_data['platform']
+                if pltfm == 0:
+                    pltfm_list = [plt.id for plt in Platforms.objects.all()]
+                else:
+                    pltfm_list = [pltfm]
                     
                 cases_queryset = Cases.objects.filter(user=request.user,
-                                                  platform=form.cleaned_data['platform'],
+                                                  platform__in=pltfm_list,
                                                   creation_date__gte=from_datetime,
                                                   creation_date__lte=to_datetime)\
                                                   .select_related('platform', 'report_type')\
@@ -74,8 +80,9 @@ class CasesView(LoginRequiredMixin, View):
                     query_title = q_title,
                     status = 'running')
                 case.save()
+                q_id = case.query_id
                 ebay_sites_list = form.cleaned_data['ebay_sites']
-                send_report()
+                send_ebay_listing_report(to_email=request.user.email, query_id = q_id)
                 return JsonResponse({'status' : 'success',
                                      'ebay_sites' : ebay_sites_list})
             

@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from mongoengine import EmbeddedDocument, DynamicDocument
+from mongoengine.fields import StringField, IntField, ListField, DecimalField, EmbeddedDocumentField, BooleanField
 
 class Platforms(models.Model):
     id = models.AutoField(primary_key=True)
@@ -22,5 +24,29 @@ class Cases(models.Model):
     report_type = models.ForeignKey(Reports, on_delete=models.DO_NOTHING)
     query_title = models.CharField(max_length=100)
     status = models.CharField(max_length=10)
-    
+
+
+class Price(EmbeddedDocument):
+    CurrencyID = StringField(max_length=6)
+    Value = DecimalField()
+
+class EbayItem(DynamicDocument):
+    lnkr_query_id = IntField()
+    ItemID = StringField(max_length=16)
+    Title = StringField()
+    PaymentMethods = ListField(StringField())
+    Site = StringField()
+    QuantitySold = IntField()
+    CurrentPrice = EmbeddedDocumentField(Price)
+    ConvertedCurrentPrice = EmbeddedDocumentField(Price)
+    HitCount = IntField()
+    GlobalShipping = BooleanField()
+    PrimaryCategoryID = StringField()
+    PrimaryCategoryName = StringField()
+    ListingType = StringField()
+    PictureURL = ListField(StringField())
+    ListingStatus = StringField()
+    Country = StringField()
+    Location = StringField()
+    ListingType = StringField()
     

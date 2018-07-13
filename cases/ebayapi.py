@@ -1,16 +1,6 @@
-import pymongo
 import requests
 import json
 from urllib.parse import urlencode
-
-
-def connect_to_mongo():
-    DB_NAME = "linkero-db"
-    DB_HOST = "attila"
-    DB_PORT = 27018
-    DB_USER = "linkero-user"
-    DB_PSWD = "123linkero123"
-    return mongoengine.connect(DB_NAME, host=DB_HOST, port=DB_PORT, username=DB_USER, password=DB_PSWD)
 
 
 class EbayApi():
