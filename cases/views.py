@@ -36,7 +36,7 @@ class CasesView(LoginRequiredMixin, View):
                 
                 pltfm = form.cleaned_data['platform']
                 if pltfm == 0:
-                    pltfm_list = [plt.id for plt in Platforms.objects.all()]
+                    pltfm_list = Platforms.objects.all()
                 else:
                     pltfm_list = [pltfm]
                     

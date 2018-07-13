@@ -7,7 +7,7 @@ from cases.models import EbayItem
 @task()
 def send_ebay_listing_report(to_email='s.richiardi@gmail.com', query_id=None):
     ea = EbayApi()
-    list_of_items = [332094821083, 232698814292, 263757357723]
+    list_of_items = ['332094821083', '232698814292', '263757357723']
     j_items = ea.get_multiple_items(items_list=list_of_items)
     # assuming j_items['Ack'] == 'Success'
     for item in j_items['Item']:
