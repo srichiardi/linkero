@@ -25,13 +25,13 @@ class Cases(models.Model):
     query_title = models.CharField(max_length=100)
     status = models.CharField(max_length=10)
 
-class CurrentPrice(EmbeddedDocument):
-    CurrencyID = StringField(max_length=6)
-    Value = DecimalField()
-    
-class ConvertedCurrentPrice(EmbeddedDocument):
-    CurrencyID = StringField(max_length=6)
-    Value = DecimalField()
+# class CurrentPrice(EmbeddedDocument):
+#     CurrencyID = StringField(max_length=6)
+#     Value = DecimalField()
+#     
+# class ConvertedCurrentPrice(EmbeddedDocument):
+#     CurrencyID = StringField(max_length=6)
+#     Value = DecimalField()
     
 class EbayItem(DynamicDocument):
     lnkr_query_id = IntField()
@@ -40,8 +40,8 @@ class EbayItem(DynamicDocument):
     PaymentMethods = ListField(StringField())
     Site = StringField()
     QuantitySold = IntField()
-    CurrentPrice = EmbeddedDocumentField('CurrentPrice')
-    ConvertedCurrentPrice = EmbeddedDocumentField('ConvertedCurrentPrice')
+#     CurrentPrice = EmbeddedDocumentField('CurrentPrice')
+#     ConvertedCurrentPrice = EmbeddedDocumentField('ConvertedCurrentPrice')
     HitCount = IntField()
     GlobalShipping = BooleanField()
     PrimaryCategoryID = StringField()
