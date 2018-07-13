@@ -14,5 +14,11 @@ def send_ebay_listing_report(to_email='s.richiardi@gmail.com', query_id=None):
         item['lnkr_query_id'] = query_id
         e_item = EbayItem(**item)
         e_item.save()
-    send_mail('first email from Linkero', 'this is the first email that linkero sends, aren\' you proud?', 'LinkeroReports@linkero.ie', ['s.richiardi@gmail.com'], fail_silently=False)
+        
+    itm = EbayItem.objects(ItemID="232698814292").first()
+    item_title = itm.Title
+    
+    MSG_TEXT = 'Hi Stefano,\nyou pulled the item "{}"'.format(item_title)
+    
+    send_mail('Listings from Linkero', MSG_TEXT, 'LinkeroReports@linkero.ie', ['s.richiardi@gmail.com'], fail_silently=False)
     
