@@ -26,10 +26,6 @@ class Cases(models.Model):
     status = models.CharField(max_length=10)
 
 
-class Price(EmbeddedDocument):
-    CurrencyID = StringField(max_length=6)
-    Value = DecimalField()
-
 class EbayItem(DynamicDocument):
     lnkr_query_id = IntField()
     ItemID = StringField(max_length=16)
@@ -49,4 +45,7 @@ class EbayItem(DynamicDocument):
     Country = StringField()
     Location = StringField()
     ListingType = StringField()
-    
+
+class Price(EmbeddedDocument):
+    CurrencyID = StringField(max_length=6)
+    Value = DecimalField()
