@@ -8,7 +8,7 @@ from cases.models import Cases, Reports, Platforms
 from datetime import datetime, timedelta
 from django.http import JsonResponse
 from pyexpat import errors
-from cases.tasks import send_report
+from cases.tasks import send_ebay_listing_report
 
 
 # Loading the "cases" page and pull filtered cases.
