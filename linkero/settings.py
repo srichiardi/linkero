@@ -101,7 +101,7 @@ DATABASES = {
 
 _MONGODB_USER = 'linkero-user'
 _MONGODB_PASSWD = '123linkero123'
-_MONGODB_HOST = 'attila'
+_MONGODB_HOST = 'localhost'
 _MONGODB_NAME = 'linkerodb'
 _MONGODB_PORT = 27017
 
