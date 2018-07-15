@@ -2,12 +2,14 @@ from celery import task
 from django.core.mail import send_mail
 from cases.ebayapi import EbayApi
 from cases.models import EbayItem
+import time
 
 
 @task()
-def send_ebay_listing_report(to_email='s.richiardi@gmail.com', query_id=None):
+def send_ebay_listing_report(to_email, query_id=None):
     ea = EbayApi()
     list_of_items = ['332094821083', '232698814292', '263757357723']
+    time.sleep(10)
     j_items = ea.get_multiple_items(items_list=list_of_items)
     # assuming j_items['Ack'] == 'Success'
     for item in j_items['Item']:
