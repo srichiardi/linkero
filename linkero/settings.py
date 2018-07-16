@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-import mongoengine
 
 ## Celery configuration
 # CELERY STUFF
@@ -103,13 +102,6 @@ DATABASES = {
     },
 }
 
-_MONGODB_USER = 'linkero-user'
-_MONGODB_PASSWD = '123linkero123'
-_MONGODB_HOST = 'localhost'
-_MONGODB_NAME = 'linkerodb'
-_MONGODB_PORT = 27017
-
-mongoengine.connect(_MONGODB_NAME, host=_MONGODB_HOST, port=_MONGODB_PORT, username=_MONGODB_USER, password=_MONGODB_PASSWD)
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators

@@ -1,4 +1,5 @@
 from celery import task
+from mongoengine import connect
 from django.core.mail import send_mail
 from cases.ebayapi import EbayApi
 from cases.models import EbayItem
@@ -7,6 +8,14 @@ import time
 
 @task()
 def send_ebay_listing_report(to_email, query_id=None):
+    _MONGODB_USER = 'linkero-user'
+    _MONGODB_PASSWD = '123linkero123'
+    _MONGODB_HOST = 'localhost'
+    _MONGODB_NAME = 'linkerodb'
+    _MONGODB_PORT = 27017
+    
+    connect(_MONGODB_NAME, host=_MONGODB_HOST, port=_MONGODB_PORT, username=_MONGODB_USER, password=_MONGODB_PASSWD)
+    
     ea = EbayApi()
     list_of_items = ['332094821083', '232698814292', '263757357723']
     time.sleep(10)
