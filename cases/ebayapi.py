@@ -1,6 +1,7 @@
 import requests
 import json
 from urllib.parse import urlencode
+from collections import defaultdict
 
 
 class EbayApi():
@@ -8,20 +9,27 @@ class EbayApi():
         self.api_key = 'StefanoR-ebayFric-PRD-19f17700d-ff298548'
         
         
-    def find_items_mult_pages(self, e_site='EBAY-US', kwd=None, s_id=None, s_desc='false'):
+    def find_items_mult_pages(self, e_site='EBAY-US', kwd=None, s_id=None, s_desc=None):
+        """ pull results of advanced search and return dictionary with items id for keys and seller id,
+        site id as values """
         tot_pages = 1
         page = 1
-        items_list = []
+        items_dict = defaultdict(dict)
         while page <= min(100, tot_pages):
             result_set = find_items(ebay_site = e_site, page_nr = page, keywords = kwd, seller_id = s_id,
                                     search_desc = s_desc)
             tot_pages = int(result_set['findItemsAdvancedResponse'][0]['paginationOutput'][0]['totalPages'][0])
             page += 1
-            items_list.extend(result_set['findItemsAdvancedResponse'][0]['searchResult'][0]['item'])
+            
+            for item in result_set['findItemsAdvancedResponse'][0]['searchResult'][0]['item']:
+                items_dict[item['itemId'][0]]['sellerUserName'] = item['sellerInfo'][0]['sellerUserName'][0]
+                items_dict[item['itemId'][0]]['globalId'] = item['globalId'][0]
+            
+        return items_dict
             
 
 
-    def find_items(self, ebay_site='EBAY-US', page_nr=1, keywords=None, seller_id=None, search_desc='false'):
+    def find_items(self, ebay_site='EBAY-US', page_nr=1, keywords=None, seller_id=None, search_desc=None):
     
         url_base = "http://svcs.ebay.com/services/search/FindingService/v1?"
     
@@ -32,7 +40,8 @@ class EbayApi():
                      'GLOBAL-ID' : ebay_site,
                      'paginationInput.entriesPerPage' : 100,
                      'paginationInput.pageNumber' : page_nr,
-                     'REST-PAYLOAD' : 'true' }
+                     'REST-PAYLOAD' : 'true',
+                     'outputSelector' : 'SellerInfo' }
         
         if keywords:
             payload['keywords'] = keywords
@@ -42,7 +51,7 @@ class EbayApi():
             payload['itemFilter(0).value'] = seller_id
         
         if search_desc:
-            payload['descriptionSearch'] = search_desc
+            payload['descriptionSearch'] = 'true'
             
         url = url_base + urlencode(payload)        
         r = requests.get(url)        

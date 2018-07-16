@@ -37,15 +37,31 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
     # create find item queue:
     find_item_queue = Queue()
     
-
-    list_of_items = ['332094821083', '232698814292', '263757357723']
-
-    j_items = ea.get_multiple_items(items_list=list_of_items)
-    # assuming j_items['Ack'] == 'Success'
-    for item in j_items['Item']:
-        item['lnkr_query_id'] = query_id
-        e_item = EbayItem(**item)
-        e_item.save()
+    # search and pull unique list of items matching input criterias
+    tot_items = []
+    for site in ebay_sites:
+        dict_of_items = ea.find_items_mult_pages(e_site=site, kwd=keywords, s_id=seller_id, s_desc=search_desc)
+        tot_items.append(dict_of_items)
+    
+    # deduplicate items and generate a list of ebay sites values for each item key
+    
+    # pull item descriptions for each item
+    unique_items = dict_of_items.keys()
+    items_matrix = [ unique_items[i:i+20] for i in xrange(0, len(unique_items), 20) ]
+    for items_chunk in items_matrix:
+        j_items = ea.get_multiple_items(items_list=list_of_items)
+        
+        ebay_item_list = []
+        # assuming j_items['Ack'] == 'Success'
+        for item in j_items['Item']:
+            item['lnkr_query_id'] = query_id
+            ebay_item_list.append(EbayItem(**item))
+        # insert in bulk
+        EbayItem.objects.insert(ebay_item_list)
+    
+    # pull seller details
+    
+    # pull all results and tabulate
         
     itm = EbayItem.objects(ItemID="232698814292").first()
     item_title = itm.Title
