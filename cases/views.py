@@ -36,18 +36,24 @@ class CasesView(LoginRequiredMixin, View):
                 
                 pltfm = form.cleaned_data['platform']
                 if pltfm == 0:
-                    pltfm_list = [1,2,3,4]
-                else:
-                    pltfm_list = [pltfm]
-                    
-                cases_queryset = Cases.objects.filter(user=request.user,
-                                                  platform__in=pltfm_list,
+                    cases_queryset = Cases.objects.filter(user=request.user,
                                                   creation_date__gte=from_datetime,
                                                   creation_date__lte=to_datetime)\
                                                   .select_related('platform', 'report_type')\
                                                   .order_by('-query_id')\
                                                   .values('query_id','platform__name','creation_date','query_title','status',
                                                           'report_type__report_name')
+                else:
+                    cases_queryset = Cases.objects.filter(user=request.user,
+                                                  platform=pltfm,
+                                                  creation_date__gte=from_datetime,
+                                                  creation_date__lte=to_datetime)\
+                                                  .select_related('platform', 'report_type')\
+                                                  .order_by('-query_id')\
+                                                  .values('query_id','platform__name','creation_date','query_title','status',
+                                                          'report_type__report_name')
+                    
+                
                 
                 #serialized_cases = list(cases_queryset)
                 cases_table = render_to_string('cases/cases_table.html', {'cases_list' : cases_queryset})
@@ -82,7 +88,7 @@ class CasesView(LoginRequiredMixin, View):
                 case.save()
                 q_id = case.query_id
                 ebay_sites_list = form.cleaned_data['ebay_sites']
-                send_ebay_listing_report.delay(request.user.email, query_id = q_id)
+                send_ebay_listing_report.delay(request.user.email, query_id = q_id, user_id=request.user.id)
                 return JsonResponse({'status' : 'success',
                                      'ebay_sites' : ebay_sites_list})
             

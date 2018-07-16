@@ -1,8 +1,10 @@
+from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
-from mongoengine import EmbeddedDocument, DynamicDocument
+from mongoengine import EmbeddedDocument, DynamicDocument, DynamicEmbeddedDocument
 from mongoengine.fields import StringField, IntField, ListField, DecimalField, EmbeddedDocumentField, BooleanField
 
+# Create your MySQL models here.
 class Platforms(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
@@ -15,7 +17,6 @@ class Reports(models.Model):
     report_name = models.CharField(max_length=50)
      
  
-# Create your models here.
 class Cases(models.Model):
     query_id = models.AutoField(primary_key=True)
     platform = models.ForeignKey(Platforms, on_delete=models.DO_NOTHING)
@@ -25,14 +26,24 @@ class Cases(models.Model):
     query_title = models.CharField(max_length=100)
     status = models.CharField(max_length=10)
 
-# class CurrentPrice(EmbeddedDocument):
-#     CurrencyID = StringField(max_length=6)
-#     Value = DecimalField()
-#     
-# class ConvertedCurrentPrice(EmbeddedDocument):
-#     CurrencyID = StringField(max_length=6)
-#     Value = DecimalField()
+
+# Create your MongoDB models here.
+class InputArgs(DynamicEmbeddedDocument):
+    pass
+
+class QueryInputs(DynamicDocument):
+    lnkr_query_id = IntField()
+    lnkr_user_id = IntField()
+    platform = StringField()
+    report_type = StringField()
+    creation_date = DateTimeField(default=datetime.now())
+    status = StringField()
+    input_args = EmbeddedDocumentField(InputArgs, default=InputArgs())
     
+class Price(EmbeddedDocument):
+    CurrencyID = StringField(max_length=6)
+    Value = DecimalField()
+
 class EbayItem(DynamicDocument):
     lnkr_query_id = IntField()
     ItemID = StringField(max_length=16)
@@ -40,8 +51,8 @@ class EbayItem(DynamicDocument):
     PaymentMethods = ListField(StringField())
     Site = StringField()
     QuantitySold = IntField()
-#     CurrentPrice = EmbeddedDocumentField('CurrentPrice')
-#     ConvertedCurrentPrice = EmbeddedDocumentField('ConvertedCurrentPrice')
+    CurrentPrice = EmbeddedDocumentField(Price)
+#     ConvertedCurrentPrice = EmbeddedDocumentField(Price)
     HitCount = IntField()
     GlobalShipping = BooleanField()
     PrimaryCategoryID = StringField()

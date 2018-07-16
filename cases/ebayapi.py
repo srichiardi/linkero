@@ -6,9 +6,22 @@ from urllib.parse import urlencode
 class EbayApi():
     def __init__(self):
         self.api_key = 'StefanoR-ebayFric-PRD-19f17700d-ff298548'
+        
+        
+    def find_items_mult_pages(self, e_site='EBAY-US', kwd=None, s_id=None, s_desc='false'):
+        tot_pages = 1
+        page = 1
+        items_list = []
+        while page <= min(100, tot_pages):
+            result_set = find_items(ebay_site = e_site, page_nr = page, keywords = kwd, seller_id = s_id,
+                                    search_desc = s_desc)
+            tot_pages = int(result_set['findItemsAdvancedResponse'][0]['paginationOutput'][0]['totalPages'][0])
+            page += 1
+            items_list.extend(result_set['findItemsAdvancedResponse'][0]['searchResult'][0]['item'])
+            
 
 
-    def load_find_items(self, ebay_site='EBAY-US', page_nr=1, keywords=None, seller_id=None, search_desc='false'):
+    def find_items(self, ebay_site='EBAY-US', page_nr=1, keywords=None, seller_id=None, search_desc='false'):
     
         url_base = "http://svcs.ebay.com/services/search/FindingService/v1?"
     
