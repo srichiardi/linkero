@@ -82,7 +82,7 @@ class CasesView(LoginRequiredMixin, View):
                 case.save()
                 q_id = case.query_id
                 ebay_sites_list = form.cleaned_data['ebay_sites']
-                send_ebay_listing_report(request.user.email, query_id = q_id)
+                send_ebay_listing_report.delay(request.user.email, query_id = q_id)
                 return JsonResponse({'status' : 'success',
                                      'ebay_sites' : ebay_sites_list})
             

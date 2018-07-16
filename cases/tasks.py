@@ -22,5 +22,5 @@ def send_ebay_listing_report(to_email, query_id=None):
     
     MSG_TEXT = 'Hi Stefano,\nyou pulled the item "{}"'.format(item_title)
     
-    send_mail('Listings from Linkero', MSG_TEXT, 'LinkeroReports@linkero.ie', ['s.richiardi@gmail.com'], fail_silently=False)
+    send_mail('Listings from Linkero', MSG_TEXT, 'LinkeroReports@linkero.ie', [to_email], fail_silently=False)
     
