@@ -63,3 +63,6 @@ class EbayItem(DynamicDocument):
     Country = StringField()
     Location = StringField()
     ListingType = StringField()
+
+class EbaySellerDetails(DynamicDocument):
+    pass
