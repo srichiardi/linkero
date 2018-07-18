@@ -34,7 +34,7 @@ class EbayApi():
         # fill dict with item id as key and list of sites as values
         items_dict = defaultdict(list)
         seller_list = []
-        while out_queue.not_empty():
+        while not out_queue.empty():
             batch = out_queue.get()
             for item, i_dict in batch.items():
                 site = i_dict['ebaySite']
@@ -56,14 +56,14 @@ class EbayApi():
         page = 1
         items_dict = defaultdict(dict)
         while page <= min(100, tot_pages):
-            result_set = find_items(ebay_site = e_site, page_nr = page, keywords = kwd, seller_id = s_id,
+            result_set = self.find_items(ebay_site = e_site, page_nr = page, keywords = kwd, seller_id = s_id,
                                     search_desc = s_desc)
             tot_pages = int(result_set['findItemsAdvancedResponse'][0]['paginationOutput'][0]['totalPages'][0])
             page += 1
             
             for item in result_set['findItemsAdvancedResponse'][0]['searchResult'][0]['item']:
                 items_dict[item['itemId'][0]]['sellerUserName'] = item['sellerInfo'][0]['sellerUserName'][0]
-                items_dict[item['itemId'][0]]['ebaySite'] = ebay_site
+                items_dict[item['itemId'][0]]['ebaySite'] = e_site
         
         if out_q:
             out_q.put(items_dict)
@@ -133,15 +133,15 @@ class EbayApi():
         for item_id, e_sites in items_dict.items():
             for p_site in sites_priority:
                 if p_site in e_sites:
-                    items_by_sites[p_site].append(item)
+                    items_by_sites[p_site].append(item_id)
                     break
         
         output_queue = Queue()
         for site, items in items_by_sites.items():
-            items_strings = [ ','.join(items[i:i+20]) for i in xrange(0, len(items), 20) ]
+            item_packets = [ items[i:i+20] for i in range(0, len(items), 20) ]
             threads_list = []
-            # batches of 20 strings of 20 items  
-            items_matrix = [ items_strings[i:i+max_threads] for i in xrange(0, len(items_strings), max_threads) ]
+            # batches of 20 packets of 20 items  
+            items_matrix = [ item_packets[i:i+max_threads] for i in range(0, len(item_packets), max_threads) ]
             for batch in items_matrix:
                 for string_list in batch:
                     thread_call = Thread(target=self.get_multiple_items,
@@ -156,7 +156,7 @@ class EbayApi():
                     t.join()
         
         items_results = []
-        while output_queue.not_empty():
+        while not output_queue.empty():
             items = output_queue.get()
             for itm in items['Item']:
                 itm['ebay_sites'] = ','.join(items_dict[itm['ItemID']])
@@ -166,7 +166,7 @@ class EbayApi():
         return items_results        
 
 
-    def get_seller_details(self, out_q=None, seller_id):
+    def get_seller_details(self, seller_id=None, out_q=None):
         
         url_base = "http://open.api.ebay.com/shopping?"
         
@@ -188,7 +188,7 @@ class EbayApi():
         
     def get_multiple_sellers(self, seller_list=[], max_threads=20):
         output_queue = Queue()
-        seller_matrix = [ seller_list[i:i+max_threads] for i in xrange(0, len(seller_list), max_threads) ]
+        seller_matrix = [ seller_list[i:i+max_threads] for i in range(0, len(seller_list), max_threads) ]
         for batch in seller_matrix:
             thread_list = []
             for seller_id in batch:
@@ -200,7 +200,7 @@ class EbayApi():
                 t.join()
         
         seller_results = []
-        while output_queue.not_empty():
+        while not output_queue.empty():
             seller = output_queue.get()
             seller_results.append(seller)
             output_queue.task_done()

@@ -1,10 +1,9 @@
-import json
-from collections import defaultdict
 from celery import task
+from pandas.io.json import json_normalize
 from mongoengine import connect
 from django.core.mail import send_mail
 from cases.ebayapi import EbayApi
-from cases.models import EbayItem, QueryInputs, EbaySellerDetails
+from cases.models import EbayItem, QueryInputs, EbaySellerDetails, InputArgs
 
 
 @task()
@@ -22,40 +21,54 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
                               platform = 'ebay',
                               report_type = 'listing details',
                               status = 'running',
-                              input_args = { 'seller_id' : seller_id,
+                              input_args = InputArgs(**{ 'seller_id' : seller_id,
                                             'keywords' : keywords,
                                             'ebay_sites' : ebay_sites,
                                             'search_desc' : search_desc
-                                            }
+                                            })
                               )
     
     query_input.save()
+    print('saved query input')
     
     ea = EbayApi()
     
-    # create find item queue:
-    find_item_queue = Queue()
-    
     # search and pull unique list of items matching input criterias
-    items_dict, slr_list = ea.find_items_multi_sites(e_site=ebay_sites, kwd=keywords, s_id=seller_id, s_desc=search_desc)
+    items_dict, slr_list = ea.find_items_multi_sites(e_sites=ebay_sites, kwd=keywords, s_id=seller_id, s_desc=search_desc)
+    print('completed find items advanced query')
     
     # pull item descriptions for each item
     ebay_item_list = ea.get_multi_items_threaded(items_dict)
+    print('completed get item description query')
     
     # add query_id to item dictionary before saving in MongoDB
-    for item in j_items['Item']:
+    ebay_collection_list = []
+    for item in ebay_item_list:
         item['lnkr_query_id'] = query_id
-        ebay_item_list.append(EbayItem(**item))
+        ebay_collection_list.append(EbayItem(**item))
     # insert in bulk
-    EbayItem.objects.insert(ebay_item_list)
+    EbayItem.objects.insert(ebay_collection_list)
+    print('saved all item description in MongoDB')
     
     # pull seller details
     seller_list = ea.get_multiple_sellers(seller_list=slr_list)
+    print('completed seller registration details query')
     
     # pull all results and tabulate
+    e_items = EbayItem.objects(lnkr_query_id=query_id)
+    df = json_normalize(json.loads(e_item.to_json()))
+    file_name = "/home/stefano/mongo_output.csv"
+    df.to_csv(file_name, sep='\t', encoding='utf-8')
     
-    
-    MSG_TEXT = 'Hi Stefano,\nyou pulled the item "{}"'.format(item_title)
-    
-    send_mail('Linkero report: ebay listings', MSG_TEXT, 'LinkeroReports@linkero.ie', [to_email], fail_silently=False)
+    MSG_TEXT = 'Hi Stefano,\nyou pulled the item'
+    email = EmailMessage(
+        'Linkero report: ebay listings',
+        MSG_TEXT,
+        'LinkeroReports@linkero.ie',
+        [to_email]
+    )
+    file_attachment = open(file_name, 'r')
+    email.attach('ebay_listing_output.csv', file_attachment, 'text/plain')
+    email.send(fail_silently=False)
+    file_attachment.close()
     
