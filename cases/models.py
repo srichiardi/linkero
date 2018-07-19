@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
-from mongoengine import EmbeddedDocument, DynamicDocument, DynamicEmbeddedDocument
+from mongoengine import Document, EmbeddedDocument, DynamicDocument, DynamicEmbeddedDocument
 from mongoengine.fields import StringField, IntField, ListField, DecimalField, EmbeddedDocumentField, BooleanField
 
 # Create your MySQL models here.
@@ -39,6 +39,13 @@ class QueryInputs(DynamicDocument):
     creation_date = DateTimeField(default=datetime.now())
     status = StringField()
     input_args = EmbeddedDocumentField(InputArgs, default=InputArgs())
+    
+class ApiErrorLog(Document):
+    platform = StringField()
+    api_call = StringField()
+    input = StringField()
+    error_message = StringField()
+    creation_date = DateTimeField(default=datetime.now())
     
 class Price(EmbeddedDocument):
     CurrencyID = StringField(max_length=6)

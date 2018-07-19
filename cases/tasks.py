@@ -36,7 +36,7 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
     ea = EbayApi()
     
     # search and pull unique list of items matching input criterias
-    items_dict, slr_list = ea.find_items_multi_sites(e_sites=ebay_sites, kwd=keywords, s_id=seller_id, s_desc=search_desc)
+    items_dict, slr_list, find_error_list = ea.find_items_multi_sites(e_sites=ebay_sites, kwd=keywords, s_id=seller_id, s_desc=search_desc)
     
     # pull item descriptions for each item
     ebay_item_list = ea.get_multi_items_threaded(items_dict)
@@ -57,6 +57,14 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
         ebay_collection_list.append(EbaySellerDetails(**slr))
     # insert in bulk
     EbaySellerDetails.objects.insert(seller_collection_list)
+    
+    # save api error messages
+    error_collection_list = []
+    for err in find_error_list:
+        err['lnkr_query_id'] = query_id
+        error_collection_list.append(ApiErrorLog(**err))
+    # insert in bulk
+    ApiErrorLog.objects.insert(error_collection_list)
     
     # save the results in a CSV file and send it attached
     e_items = EbayItem.objects(lnkr_query_id=query_id)

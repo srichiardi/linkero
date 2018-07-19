@@ -7,69 +7,13 @@ from collections import defaultdict
 from cases.ebaySettings import globalSiteMap
 
 
+class EbayApiException(Exception):
+    pass
+
+
 class EbayApi():
     def __init__(self):
         self.api_key = 'StefanoR-ebayFric-PRD-19f17700d-ff298548'
-        
-        
-    def find_items_multi_sites(self, e_sites=['US'], kwd=None, s_id=None, s_desc=None):
-        """ Start up to 20 parallel threads, one each site id """
-        threads_list = []
-        out_queue = Queue()
-        for site in e_sites:
-            thread_call = Thread(target = self.find_items_multi_pages,
-                                 kwargs = {'out_q' : out_queue,
-                                           'e_site' : site,
-                                           'kwd' : kwd,
-                                           's_id' : s_id,
-                                           's_desc' : s_desc}
-                                 )
-            threads_list.append(thread_call)
-            thread_call.start()
-            
-        # wait for threads to finish
-        for t in threads_list:
-            t.join()
-        
-        # fill dict with item id as key and list of sites as values
-        items_dict = defaultdict(list)
-        seller_list = []
-        while not out_queue.empty():
-            batch = out_queue.get()
-            for item, i_dict in batch.items():
-                site = i_dict['ebaySite']
-                seller = i_dict['sellerUserName']
-                if site not in items_dict[item]:
-                    items_dict[item].append(site)
-                if seller not in seller_list:
-                    seller_list.append(seller)
-                
-            out_queue.task_done()
-            
-        return items_dict, seller_list            
-    
-        
-    def find_items_multi_pages(self, out_q=None, e_site='US', kwd=None, s_id=None, s_desc=None):
-        """ pull results of advanced search and return dictionary with items id for keys and seller id,
-        site id as values """
-        tot_pages = 1
-        page = 1
-        items_dict = defaultdict(dict)
-        while page <= min(100, tot_pages):
-            result_set = self.find_items(ebay_site = e_site, page_nr = page, keywords = kwd, seller_id = s_id,
-                                    search_desc = s_desc)
-            tot_pages = int(result_set['findItemsAdvancedResponse'][0]['paginationOutput'][0]['totalPages'][0])
-            page += 1
-            
-            for item in result_set['findItemsAdvancedResponse'][0]['searchResult'][0]['item']:
-                items_dict[item['itemId'][0]]['sellerUserName'] = item['sellerInfo'][0]['sellerUserName'][0]
-                items_dict[item['itemId'][0]]['ebaySite'] = e_site
-        
-        if out_q:
-            out_q.put(items_dict)
-        else:
-            return items_dict
-            
 
 
     def find_items(self, ebay_site='US', page_nr=1, keywords=None, seller_id=None, search_desc=None):
@@ -99,8 +43,87 @@ class EbayApi():
         url = url_base + urlencode(payload)        
         r = requests.get(url)
         
-        return json.loads(r.text)
+        j_results = json.loads(r.text)
+         
+        if j_results['findItemsAdvancedResponse'][0]['ack'][0] == 'Success':
+            return json.loads(r.text)
+        else:
+            ERR_MSG = {'platform' : 'ebay',
+                       'api_call' : 'findItemsAdvanced',
+                       'input' : 'ebay_site: {}, page_nr: {}, keywords: {}, seller_id: {}, search_desc: {}'.format(ebay_site, page_nr, keywords, seller_id, search_desc),
+                       'error_message' :  j_results['findItemsAdvancedResponse'][0]['errorMessage'][0]['error'][0]['message'][0]}
+            raise EbayApiException(ERR_MSG)
+    
         
+    def find_items_multi_pages(self, out_q=None, err_q=None, e_site='US', kwd=None, s_id=None, s_desc=None):
+        """ pull results of advanced search and return dictionary with items id for keys and seller id,
+        site id as values """
+        tot_pages = 1
+        page = 1
+        err_occurred = False
+        
+        while page <= min(100, tot_pages):
+            items_dict = defaultdict(dict)
+            try:
+                result_set = self.find_items(ebay_site = e_site, page_nr = page, keywords = kwd, seller_id = s_id,
+                                    search_desc = s_desc)
+            except EbayApiException as e:
+                err_q.put(e.args[0])
+                err_occurred = True
+                break
+            else:
+                tot_pages = int(result_set['findItemsAdvancedResponse'][0]['paginationOutput'][0]['totalPages'][0])
+                page += 1
+                
+                for item in result_set['findItemsAdvancedResponse'][0]['searchResult'][0]['item']:
+                    items_dict[item['itemId'][0]]['sellerUserName'] = item['sellerInfo'][0]['sellerUserName'][0]
+                    items_dict[item['itemId'][0]]['ebaySite'] = e_site
+                
+                out_q.put(items_dict)
+    
+    
+    def find_items_multi_sites(self, e_sites=['US'], kwd=None, s_id=None, s_desc=None):
+        """ Start up to 20 parallel threads, one each site id """
+        threads_list = []
+        out_queue = Queue()
+        err_queue = Queue()
+        for site in e_sites:
+            thread_call = Thread(target = self.find_items_multi_pages,
+                                 kwargs = {'out_q' : out_queue,
+                                           'err_q' : err_queue,
+                                           'e_site' : site,
+                                           'kwd' : kwd,
+                                           's_id' : s_id,
+                                           's_desc' : s_desc}
+                                 )
+            threads_list.append(thread_call)
+            thread_call.start()
+            
+        # wait for threads to finish
+        for t in threads_list:
+            t.join()
+        
+        # fill dict with item id as key and list of sites as values
+        items_dict = defaultdict(list)
+        seller_list = []
+        error_list = []
+        while not out_queue.empty():
+            batch = out_queue.get()
+            for item, i_dict in batch.items():
+                site = i_dict['ebaySite']
+                seller = i_dict['sellerUserName']
+                if site not in items_dict[item]:
+                    items_dict[item].append(site)
+                if seller not in seller_list:
+                    seller_list.append(seller)
+                
+            out_queue.task_done()
+        
+        while not err_queue.empty():
+            error_list.append(err_queue.get())            
+            
+        return items_dict, seller_list, error_list
+            
 
     def get_multiple_items(self, out_q=None, items_list=[], ebay_site='US'):
         

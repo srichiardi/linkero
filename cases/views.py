@@ -78,8 +78,8 @@ class CasesView(LoginRequiredMixin, View):
         if request.is_ajax():
             form = EbayListingForm(request.POST)
             if form.is_valid():
-                if form.cleaned_data['seller_ids'].strip():
-                    q_title = form.cleaned_data['seller_ids'].strip()
+                if form.cleaned_data['seller_id'].strip():
+                    q_title = form.cleaned_data['seller_id'].strip()
                 else:
                     q_title = form.cleaned_data['keywords'].strip()
                 
@@ -98,7 +98,7 @@ class CasesView(LoginRequiredMixin, View):
                     send_ebay_listing_report.delay(form.cleaned_data['send_to_email'].strip(),
                                                    query_id = q_id,
                                                    user_id=request.user.id,
-                                                   seller_id=form.cleaned_data['seller_ids'].strip(),
+                                                   seller_id=form.cleaned_data['seller_id'].strip(),
                                                    keywords=form.cleaned_data['keywords'].strip(),
                                                    ebay_sites=form.cleaned_data['ebay_sites'],
                                                    search_desc=form.cleaned_data['desc_search'])

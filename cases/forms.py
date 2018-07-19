@@ -56,8 +56,8 @@ class EbayListingForm(forms.Form):
         choices=EBAY_SITES_CHOICES
     )
     
-    seller_ids = forms.CharField(required=False,
-                                 label="Seller ids",
+    seller_id = forms.CharField(required=False,
+                                 label="Seller id",
                                  widget=forms.TextInput(attrs = {"class" : "form-control"})
                                  )
     
