@@ -70,7 +70,7 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
     
     # save the results in a CSV file and send it attached
     e_items = EbayItem.objects(lnkr_query_id=query_id)
-    items_df = json_normalize(json.loads(e_item.to_json()))
+    items_df = json_normalize(json.loads(e_items.to_json()))
     
     e_sellers = EbaySellerDetails.objects(lnkr_query_id=query_id)
     sellers_df = json_normalize(json.loads(e_sellers.to_json()))
