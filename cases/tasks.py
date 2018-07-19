@@ -78,7 +78,7 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
     df = merge(items_df, sellers_df, left_on='Seller.UserID', right_on='UserID')
     
     file_name = "/home/stefano/linkero_ebay-listings_{}.csv".format(time.strftime("%Y%m%d-%H%M"))
-    #df.drop(['_id', 'PictureURL', 'ViewItemURLForNaturalSearch'], axis=1)
+    df.drop(['PictureURL', 'ViewItemURLForNaturalSearch'], axis=1)
     df.to_csv(file_name, sep='\t', encoding='utf-8', index=False)
     
     MSG_TEXT = 'Hi Stefano,\n\nplease find your query attached.\n\nthanks,\nLinkero'
@@ -88,7 +88,7 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
         'LinkeroReports@linkero.ie',
         [to_email]
     )
-    file_attachment = open(file_name, 'r')
+    file_attachment = open(file_name, 'r').read()
     email.attach('ebay_listing_output.csv', file_attachment, 'text/plain')
     email.send(fail_silently=False)
     file_attachment.close()
