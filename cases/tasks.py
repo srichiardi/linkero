@@ -6,7 +6,7 @@ from mongoengine import connect
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from cases.ebayapi import EbayApi
-from cases.models import EbayItem, QueryInputs, EbaySellerDetails, InputArgs
+from cases.models import EbayItem, QueryInputs, EbaySellerDetails, InputArgs, ApiErrorLog
 
 
 @task()
