@@ -1,4 +1,5 @@
 import time
+import json
 from celery import task
 from pandas import merge
 from pandas.io.json import json_normalize
