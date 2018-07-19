@@ -109,7 +109,7 @@ class CasesView(LoginRequiredMixin, View):
                 else:
                     # return an error requesting that either the seller id or keyword be provided
                     return JsonResponse({'status' : 'fail',
-                                         'error' : 'either seller or keywords (or both) needs to be provided'})
+                                         'error' : 'please provide either a seller id or keywords (or both)'})
             
             # if form is invalid
             else:
