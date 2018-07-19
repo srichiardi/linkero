@@ -60,11 +60,12 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
     
     # save api error messages
     error_collection_list = []
-    for err in find_error_list:
-        err['lnkr_query_id'] = query_id
-        error_collection_list.append(ApiErrorLog(**err))
-    # insert in bulk
-    ApiErrorLog.objects.insert(error_collection_list)
+    if find_error_list:
+        for err in find_error_list:
+            err['lnkr_query_id'] = query_id
+            error_collection_list.append(ApiErrorLog(**err))
+        # insert in bulk
+        ApiErrorLog.objects.insert(error_collection_list)
     
     # save the results in a CSV file and send it attached
     e_items = EbayItem.objects(lnkr_query_id=query_id)
