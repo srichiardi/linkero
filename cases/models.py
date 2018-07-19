@@ -51,8 +51,8 @@ class EbayItem(DynamicDocument):
     PaymentMethods = ListField(StringField())
     Site = StringField()
     QuantitySold = IntField()
-    CurrentPrice = EmbeddedDocumentField(Price)
-#     ConvertedCurrentPrice = EmbeddedDocumentField(Price)
+#    CurrentPrice = EmbeddedDocumentField(Price)
+#    ConvertedCurrentPrice = EmbeddedDocumentField(Price)
     HitCount = IntField()
     GlobalShipping = BooleanField()
     PrimaryCategoryID = StringField()
@@ -65,4 +65,8 @@ class EbayItem(DynamicDocument):
     ListingType = StringField()
 
 class EbaySellerDetails(DynamicDocument):
-    pass
+    lnkr_query_id = IntField()
+    FeedbackScore = IntField()
+    UserID = StringField()
+    RegistrationSite = StringField(max_length=20)
+    SellerBusinessType = StringField()

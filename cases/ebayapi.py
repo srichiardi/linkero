@@ -180,10 +180,11 @@ class EbayApi():
 
         url = url_base + urlencode(payload)
         r = requests.get(url)
+        j_seller = json.loads(r.text)
         if out_q:
-            out_q.put(json.loads(r.text))
+            out_q.put(j_seller['User'])
         else:
-            return json.loads(r.text)
+            return j_seller['User']
         
         
     def get_multiple_sellers(self, seller_list=[], max_threads=20):

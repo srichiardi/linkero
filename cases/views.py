@@ -78,19 +78,38 @@ class CasesView(LoginRequiredMixin, View):
         if request.is_ajax():
             form = EbayListingForm(request.POST)
             if form.is_valid():
-                q_title = form.cleaned_data['keywords'] + form.cleaned_data['seller_ids']
-                case = Cases(
-                    user = request.user,
-                    platform = Platforms.objects.get(id=form.cleaned_data['platform']),
-                    report_type = Reports.objects.get(report_id = form.cleaned_data['report_type']),
-                    query_title = q_title,
-                    status = 'running')
-                case.save()
-                q_id = case.query_id
-                ebay_sites_list = form.cleaned_data['ebay_sites']
-                send_ebay_listing_report.delay(request.user.email, query_id = q_id, user_id=request.user.id)
-                return JsonResponse({'status' : 'success',
-                                     'ebay_sites' : ebay_sites_list})
+                if form.cleaned_data['seller_ids'].strip():
+                    q_title = form.cleaned_data['seller_ids'].strip()
+                else:
+                    q_title = form.cleaned_data['keywords'].strip()
+                
+                if q_title:
+                    # create a record with input details 
+                    case = Cases(
+                        user = request.user,
+                        platform = Platforms.objects.get(id=form.cleaned_data['platform']),
+                        report_type = Reports.objects.get(report_id = form.cleaned_data['report_type']),
+                        query_title = q_title,
+                        status = 'running')
+                    case.save()
+                    q_id = case.query_id
+                    
+                    # schedule the task
+                    send_ebay_listing_report.delay(form.cleaned_data['send_to_email'].strip(),
+                                                   query_id = q_id,
+                                                   user_id=request.user.id,
+                                                   seller_id=form.cleaned_data['seller_ids'].strip(),
+                                                   keywords=form.cleaned_data['keywords'].strip(),
+                                                   ebay_sites=form.cleaned_data['ebay_sites'],
+                                                   search_desc=form.cleaned_data['desc_search'])
+                    
+                    # return a successful submission
+                    return JsonResponse({'status' : 'success'})
+                
+                else:
+                    # return an error requesting that either the seller id or keyword be provided
+                    return JsonResponse({'status' : 'fail',
+                                         'error' : 'either seller or keywords (or both) needs to be provided'})
             
             # if form is invalid
             else:

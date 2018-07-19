@@ -1,6 +1,9 @@
+import time
 from celery import task
+from pandas import merge
 from pandas.io.json import json_normalize
 from mongoengine import connect
+from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from cases.ebayapi import EbayApi
 from cases.models import EbayItem, QueryInputs, EbaySellerDetails, InputArgs
@@ -29,17 +32,14 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
                               )
     
     query_input.save()
-    print('saved query input')
     
     ea = EbayApi()
     
     # search and pull unique list of items matching input criterias
     items_dict, slr_list = ea.find_items_multi_sites(e_sites=ebay_sites, kwd=keywords, s_id=seller_id, s_desc=search_desc)
-    print('completed find items advanced query')
     
     # pull item descriptions for each item
     ebay_item_list = ea.get_multi_items_threaded(items_dict)
-    print('completed get item description query')
     
     # add query_id to item dictionary before saving in MongoDB
     ebay_collection_list = []
@@ -48,19 +48,30 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
         ebay_collection_list.append(EbayItem(**item))
     # insert in bulk
     EbayItem.objects.insert(ebay_collection_list)
-    print('saved all item description in MongoDB')
     
     # pull seller details
     seller_list = ea.get_multiple_sellers(seller_list=slr_list)
-    print('completed seller registration details query')
+    seller_collection_list = []
+    for slr in seller_list:
+        slr['lnkr_query_id'] = query_id
+        ebay_collection_list.append(EbaySellerDetails(**slr))
+    # insert in bulk
+    EbaySellerDetails.objects.insert(seller_collection_list)
     
-    # pull all results and tabulate
+    # save the results in a CSV file and send it attached
     e_items = EbayItem.objects(lnkr_query_id=query_id)
-    df = json_normalize(json.loads(e_item.to_json()))
-    file_name = "/home/stefano/mongo_output.csv"
-    df.to_csv(file_name, sep='\t', encoding='utf-8')
+    items_df = json_normalize(json.loads(e_item.to_json()))
     
-    MSG_TEXT = 'Hi Stefano,\nyou pulled the item'
+    e_sellers = EbaySellerDetails.objects(lnkr_query_id=query_id)
+    sellers_df = json_normalize(json.loads(e_sellers.to_json()))
+    
+    df = merge(items_df, sellers_df, left_on='Seller.UserID', right_on='UserID')
+    
+    file_name = "/home/stefano/linkero_ebay-listings_{}.csv".format(time.strftime("%Y%m%d-%H%M"))
+    df.drop(['_id', 'PictureURL', 'ViewItemURLForNaturalSearch'], axis=1)
+    df.to_csv(file_name, sep='\t', encoding='utf-8', index=False)
+    
+    MSG_TEXT = 'Hi Stefano,\n\nplease find your query attached.\n\nthanks,\nLinkero'
     email = EmailMessage(
         'Linkero report: ebay listings',
         MSG_TEXT,
@@ -71,4 +82,11 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
     email.attach('ebay_listing_output.csv', file_attachment, 'text/plain')
     email.send(fail_silently=False)
     file_attachment.close()
+    
+    # update status on mongoDB
+    query_input.modify(status='completed')
+    query_input.save()
+    
+    # delete the file from system
+    
     

@@ -58,25 +58,23 @@ class EbayListingForm(forms.Form):
     
     seller_ids = forms.CharField(required=False,
                                  label="Seller ids",
-                                 widget=forms.Textarea(attrs = {"class" : "form-control",
-                                                                "id" : "ebay-seller-id",
-                                                                "rows" : 5}))
+                                 widget=forms.TextInput(attrs = {"class" : "form-control"})
+                                 )
     
     keywords = forms.CharField(required=False,
                                label="Keywords",
-                               widget=forms.Textarea(attrs = {"class" : "form-control",
-                                                              "id" : "ebay-item-keywords",
-                                                              "rows" : 5}))
+                               widget=forms.TextInput(attrs = {"class" : "form-control"})
+                               )
     
     desc_search = forms.BooleanField(required=False,
-                                    label="Search in description",
-                                    widget=forms.CheckboxInput(attrs = {"id" : "desc-search"})
+                                     label="Search in description",
+                                     widget=forms.CheckboxInput()
                                      )
     
     send_to_email = forms.EmailField(required=True,
                                      label="Delivery email",
-                                     widget=forms.EmailInput(attrs = {"class" : "form-control",
-                                                                      "id" : "delivery-email-addr"}))
+                                     widget=forms.EmailInput(attrs = {"class" : "form-control"})
+                                     )
 
     
 class CaseRunForm(forms.Form):
