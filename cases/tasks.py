@@ -49,6 +49,7 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
         ebay_collection_list.append(EbayItem(**item))
     # insert in bulk
     EbayItem.objects.insert(ebay_collection_list)
+    print('saved item details')
     
     # pull seller details
     seller_list = ea.get_multiple_sellers(seller_list=slr_list)
@@ -58,6 +59,7 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
         seller_collection_list.append(EbaySellerDetails(**slr))
     # insert in bulk
     EbaySellerDetails.objects.insert(seller_collection_list)
+    print('saved seller details')
     
     # save api error messages
     error_collection_list = []
@@ -67,6 +69,7 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
             error_collection_list.append(ApiErrorLog(**err))
         # insert in bulk
         ApiErrorLog.objects.insert(error_collection_list)
+        print('saved error logs')
     
     # save the results in a CSV file and send it attached
     e_items = EbayItem.objects(lnkr_query_id=query_id)
@@ -80,6 +83,7 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
     file_name = "/home/stefano/linkero_ebay-listings_{}.csv".format(time.strftime("%Y%m%d-%H%M"))
     df.drop(['PictureURL', 'ViewItemURLForNaturalSearch'], axis=1)
     df.to_csv(file_name, sep='\t', encoding='utf-8', index=False)
+    print('created file')
     
     MSG_TEXT = 'Hi Stefano,\n\nplease find your query attached.\n\nthanks,\nLinkero'
     email = EmailMessage(
