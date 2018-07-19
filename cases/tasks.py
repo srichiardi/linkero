@@ -5,7 +5,7 @@ from pandas import merge
 from pandas.io.json import json_normalize
 from mongoengine import connect
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 from cases.ebayapi import EbayApi
 from cases.models import EbayItem, QueryInputs, EbaySellerDetails, InputArgs, ApiErrorLog
 
