@@ -2,7 +2,7 @@ from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
 from mongoengine import Document, EmbeddedDocument, DynamicDocument, DynamicEmbeddedDocument
-from mongoengine.fields import StringField, IntField, ListField, DecimalField, EmbeddedDocumentField, BooleanField
+from mongoengine.fields import StringField, IntField, ListField, DecimalField, EmbeddedDocumentField, BooleanField, DateTimeField
 
 # Create your MySQL models here.
 class Platforms(models.Model):
