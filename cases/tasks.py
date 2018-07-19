@@ -54,7 +54,7 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
     seller_collection_list = []
     for slr in seller_list:
         slr['lnkr_query_id'] = query_id
-        ebay_collection_list.append(EbaySellerDetails(**slr))
+        seller_collection_list.append(EbaySellerDetails(**slr))
     # insert in bulk
     EbaySellerDetails.objects.insert(seller_collection_list)
     
