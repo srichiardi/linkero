@@ -39,9 +39,11 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
         
         logger = send_ebay_listing_report.get_logger()
         
+        logger.info('starting find items')
         # search and pull unique list of items matching input criterias
         items_dict, slr_list, find_error_list = ea.find_items_multi_sites(e_sites=ebay_sites, kwd=keywords, s_id=seller_id, s_desc=search_desc)
         
+        logger.info('starting items details')
         # pull item descriptions for each item
         ebay_item_list = ea.get_multi_items_threaded(items_dict)
         
