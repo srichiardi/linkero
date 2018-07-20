@@ -1,4 +1,6 @@
-globalSiteMap = {
+from collections import OrderedDict
+
+globalSiteMap = OrderedDict({
                  'US' : {
                          'siteID' : '0',
                          'globalID' : 'EBAY-US',
@@ -87,4 +89,4 @@ globalSiteMap = {
                          'siteID' : '216',
                          'globalID' : 'EBAY-SG',
                          'name' : 'Singapore' }
-}
+})

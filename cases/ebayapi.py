@@ -114,7 +114,7 @@ class EbayApi():
                 seller = i_dict['sellerUserName']
                 if site not in items_dict[item]:
                     items_dict[item].append(site)
-                if seller not in seller_list:
+                if seller not in seller_list and seller != '':
                     seller_list.append(seller)
                 
             out_queue.task_done()
@@ -189,7 +189,7 @@ class EbayApi():
         return items_results        
 
 
-    def get_seller_details(self, seller_id=None, out_q=None):
+    def get_seller_details(self, seller_id=None, out_q=None, err_q=None):
         
         url_base = "http://open.api.ebay.com/shopping?"
         
@@ -204,20 +204,26 @@ class EbayApi():
         url = url_base + urlencode(payload)
         r = requests.get(url)
         j_seller = json.loads(r.text)
-        if out_q:
+        if j_seller['Ack'] == 'Success':
             out_q.put(j_seller['User'])
         else:
-            return j_seller['User']
+            ERR_MSG = {'platform' : 'ebay',
+                       'api_call' : 'GetUserProfile',
+                       'input' : 'seller_id: {}'.format(seller_id),
+                       'error_message' :  j_seller['Errors']['ShortMessage']}
+            err_q.put(ERR_MSG)
         
         
     def get_multiple_sellers(self, seller_list=[], max_threads=20):
         output_queue = Queue()
+        error_queue = Queue()
         seller_matrix = [ seller_list[i:i+max_threads] for i in range(0, len(seller_list), max_threads) ]
         for batch in seller_matrix:
             thread_list = []
             for seller_id in batch:
                 thread_call = Thread(target=self.get_seller_details, kwargs={'seller_id' : seller_id,
-                                                                             'out_q' : output_queue})
+                                                                             'out_q' : output_queue,
+                                                                             'err_q' : error_queue})
                 thread_list.append(thread_call)
                 thread_call.start()
             for t in thread_list:
@@ -229,5 +235,9 @@ class EbayApi():
             seller_results.append(seller)
             output_queue.task_done()
         
-        return seller_results
+        error_list = []
+        while not error_queue.empty():
+            error_list.append(error_queue.get()) 
+        
+        return seller_results, error_list
     

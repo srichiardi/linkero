@@ -57,7 +57,7 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
         logger.info('saved item details')
         
         # pull seller details
-        seller_list = ea.get_multiple_sellers(seller_list=slr_list)
+        seller_list, seller_err_list = ea.get_multiple_sellers(seller_list=slr_list)
         seller_collection_list = []
         for slr in seller_list:
             slr['lnkr_query_id'] = query_id
@@ -67,6 +67,7 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
         logger.info('saved seller details')
         
         # save api error messages
+        find_error_list.extend(seller_err_list)
         error_collection_list = []
         if find_error_list:
             for err in find_error_list:
@@ -86,7 +87,7 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
         df = merge(items_df, sellers_df, left_on='Seller.UserID', right_on='UserID')
         
         file_name = "/home/stefano/linkero_ebay-listings_{}.csv".format(time.strftime("%Y%m%d-%H%M"))
-        df.drop(['PictureURL', 'ViewItemURLForNaturalSearch'], axis=1)
+        df = df.drop(['PictureURL', 'ViewItemURLForNaturalSearch'], axis=1)
         df.to_csv(file_name, sep='\t', encoding='utf-8', index=False)
         logger.info('created file')
         
