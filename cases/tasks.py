@@ -78,11 +78,11 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
             logger.info('saved error logs')
         
         # save the results in a CSV file and send it attached
-        e_items = EbayItem.objects(lnkr_query_id=query_id)
-        items_df = json_normalize(json.loads(e_items.to_json()))
+        #e_items = EbayItem.objects(lnkr_query_id=query_id)
+        items_df = json_normalize(ebay_item_list)
         
-        e_sellers = EbaySellerDetails.objects(lnkr_query_id=query_id)
-        sellers_df = json_normalize(json.loads(e_sellers.to_json()))
+        #e_sellers = EbaySellerDetails.objects(lnkr_query_id=query_id)
+        sellers_df = json_normalize(seller_list)
         
         df = merge(items_df, sellers_df, left_on='Seller.UserID', right_on='UserID')
         
