@@ -45,7 +45,7 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
         
         logger.info('starting items details')
         # pull item descriptions for each item
-        ebay_item_list = ea.get_multi_items_threaded(items_dict)
+        ebay_item_list = ea.get_multi_items_threaded(items_dict, max_threads=5)
         
         # add query_id to item dictionary before saving in MongoDB
         ebay_collection_list = []
