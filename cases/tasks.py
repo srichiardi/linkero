@@ -46,15 +46,15 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
     logger.info('starting items details')
     # pull item descriptions for each item
     
-    ebay_item_list = ea.get_multi_items_threaded(items_dict)
+    ebay_item_list = ea.get_multi_items_threaded(items_dict, q_id=query_id)
     
     # add query_id to item dictionary before saving in MongoDB
-    ebay_collection_list = []
-    for item in ebay_item_list:
-        item['lnkr_query_id'] = query_id
-        ebay_collection_list.append(EbayItem(**item))
-    # insert in bulk
-    EbayItem.objects.insert(ebay_collection_list)
+#     ebay_collection_list = []
+#     for item in ebay_item_list:
+#         item['lnkr_query_id'] = query_id
+#         ebay_collection_list.append(EbayItem(**item))
+#     # insert in bulk
+#     EbayItem.objects.insert(ebay_collection_list)
     logger.info('saved item details')
     
     # pull seller details
@@ -79,8 +79,8 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
         logger.info('saved error logs')
     
     # save the results in a CSV file and send it attached
-    #e_items = EbayItem.objects(lnkr_query_id=query_id)
-    items_df = json_normalize(ebay_item_list)
+    e_items = EbayItem.objects(lnkr_query_id=query_id)
+    items_df = json_normalize(json.loads(e_items.to_json()))
     
     #e_sellers = EbaySellerDetails.objects(lnkr_query_id=query_id)
     sellers_df = json_normalize(seller_list)

@@ -5,6 +5,8 @@ from queue import Queue
 from urllib.parse import urlencode
 from collections import defaultdict
 from cases.ebaySettings import globalSiteMap
+from cases.models import EbayItem
+from mongoengine import connect
 
 
 class EbayApiException(Exception):
@@ -14,6 +16,13 @@ class EbayApiException(Exception):
 class EbayApi():
     def __init__(self):
         self.api_key = 'StefanoR-ebayFric-PRD-19f17700d-ff298548'
+        # connect to Mongo
+        _MONGODB_USER = 'linkero-user'
+        _MONGODB_PASSWD = '123linkero123'
+        _MONGODB_HOST = 'localhost'
+        _MONGODB_NAME = 'linkerodb'
+        _MONGODB_PORT = 27017
+        self.conn = connect(_MONGODB_NAME, host=_MONGODB_HOST, port=_MONGODB_PORT, username=_MONGODB_USER, password=_MONGODB_PASSWD)   
 
 
     def find_items(self, ebay_site='US', page_nr=1, keywords=None, seller_id=None, search_desc=None):
@@ -148,8 +157,7 @@ class EbayApi():
             return json.loads(r.text)
         
         
-    def get_multi_items_threaded(self, items_dict={}, max_threads=20):
-        
+    def get_multi_items_threaded(self, items_dict={}, max_threads=20, q_id=None):
         # generating a dict sites with lists of items
         sites_priority = ('GB', 'US', 'IE', 'CA-EN', 'AU', 'IT', 'FR', 'CA-FR', 'ES', 'AT', 'BE-FR', 'DE', 'MOTOR', 'BE-NL', 'NL', 'CH', 'HK', 'IN', 'MY', 'PH', 'PL', 'SG')
         items_by_sites = defaultdict(list)
@@ -177,16 +185,17 @@ class EbayApi():
                     thread_call.start()
                 for t in threads_list:
                     t.join()
-        
-        items_results = []
-        while not output_queue.empty():
-            items = output_queue.get()
-            for itm in items['Item']:
-                itm['ebay_sites'] = ','.join(items_dict[itm['ItemID']])
-                items_results.append(itm)
-            output_queue.task_done()
-        
-        return items_results        
+                
+                items_results = []
+                while not output_queue.empty():
+                    items = output_queue.get()
+                    for itm in items['Item']:
+                        itm['ebay_sites'] = ','.join(items_dict[itm['ItemID']])
+                        itm['lnkr_query_id'] = q_id
+                        items_results.append(EbayItem(**itm))
+                    output_queue.task_done()
+                EbayItem.objects.insert(items_results)
+                del items_results
 
 
     def get_seller_details(self, seller_id=None, out_q=None, err_q=None):
