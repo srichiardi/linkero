@@ -34,8 +34,8 @@ class CasesView(LoginRequiredMixin, View):
                 if to_datetime < from_datetime:
                     to_datetime = from_datetime + timedelta(days=1)
                 
-                pltfm = int(form.cleaned_data['platform'])
-                if pltfm == 0:
+                pltfm = form.cleaned_data['platform']
+                if pltfm == "0":
                     pltfm_select = [ plt.id for plt in Platforms.objects.all() ] 
                 else:
                     pltfm_select = [pltfm]
