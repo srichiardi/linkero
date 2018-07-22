@@ -35,7 +35,7 @@ class CasesView(LoginRequiredMixin, View):
                     to_datetime = from_datetime + timedelta(days=1)
                 
                 pltfm = form.cleaned_data['platform']
-                if pltfm == 0:
+                if pltfm == '0':
                     cases_queryset = Cases.objects.filter(user=request.user,
                                                   creation_date__gte=from_datetime,
                                                   creation_date__lte=to_datetime)\
