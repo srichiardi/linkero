@@ -34,24 +34,20 @@ class CasesView(LoginRequiredMixin, View):
                 if to_datetime < from_datetime:
                     to_datetime = from_datetime + timedelta(days=1)
                 
-                pltfm = form.cleaned_data['platform']
-                if pltfm == '0':
-                    cases_queryset = Cases.objects.filter(user=request.user,
-                                                  creation_date__gte=from_datetime,
-                                                  creation_date__lte=to_datetime)\
-                                                  .select_related('platform', 'report_type')\
-                                                  .order_by('-query_id')\
-                                                  .values('query_id','platform__name','creation_date','query_title','status',
-                                                          'report_type__report_name')
+                pltfm = int(form.cleaned_data['platform'])
+                if pltfm == 0:
+                    pltfm_select = [ plt.id for plt in Platforms.objects.all() ] 
                 else:
-                    cases_queryset = Cases.objects.filter(user=request.user,
-                                                  platform=pltfm,
-                                                  creation_date__gte=from_datetime,
-                                                  creation_date__lte=to_datetime)\
-                                                  .select_related('platform', 'report_type')\
-                                                  .order_by('-query_id')\
-                                                  .values('query_id','platform__name','creation_date','query_title','status',
-                                                          'report_type__report_name')
+                    pltfm_select = [pltfm]
+
+                cases_queryset = Cases.objects.filter(user=request.user,
+                                              platform__in=[pltfm_select],
+                                              creation_date__gte=from_datetime,
+                                              creation_date__lte=to_datetime)\
+                                              .select_related('platform', 'report_type')\
+                                              .order_by('-query_id')\
+                                              .values('query_id','platform__name','creation_date','query_title','status',
+                                                      'report_type__report_name')
                     
                 
                 
