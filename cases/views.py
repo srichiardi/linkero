@@ -41,7 +41,7 @@ class CasesView(LoginRequiredMixin, View):
                     pltfm_select = [pltfm]
 
                 cases_queryset = Cases.objects.filter(user=request.user,
-                                              platform__id=[pltfm_select],
+                                              platform__id__in=[pltfm_select],
                                               creation_date__gte=from_datetime,
                                               creation_date__lte=to_datetime)\
                                               .select_related('platform', 'report_type')\
