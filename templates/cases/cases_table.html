@@ -1,10 +1,56 @@
-{% for case in cases_list %}
-<tr>
-	<td>{{ case.query_id }}</td>
-	<td>{{ case.platform__name }}</td>
-	<td>{{ case.creation_date|date:"d/m/Y H:i" }}</td>
-	<td>{{ case.query_title }}</td>
-	<td>{{ case.report_type__report_name }}</td>
-	<td>{{ case.status }}</td>
-</tr>
-{% endfor %}
+		<div class="row">
+			<div class="col-md-10">
+			<table class="table table-striped" id="cases-list">
+				<thead class="text-left">
+					<tr>
+						<th>Query id</th>
+						<th>Platform</th>
+						<th>Date</th>
+						<th>Title</th>
+						<th>Report</th>
+						<th>Status</th>
+					</tr>
+				</thead>
+				<tbody class="text-left">
+				{% for case in cases_list %}
+				<tr>
+					<td>{{ case.query_id }}</td>
+					<td>{{ case.platform__name }}</td>
+					<td>{{ case.creation_date|date:"d/m/Y H:i" }}</td>
+					<td>{{ case.query_title }}</td>
+					<td>{{ case.report_type__report_name }}</td>
+					<td>{{ case.status }}</td>
+				</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+			</div>
+		</div>
+		<div class="row">
+		<div class="col-md-10">
+		{% if cases_list.has_other_pages %}
+			<ul class="pagination">
+			{% if cases_list.has_previous %}
+				<li><a href="{% modify_query page=cases_list.previous_page_number %}">&laquo;</a></li>
+			{% else %}
+				<li class="disabled"><span>&laquo;</span></li>
+			{% endif %}
+			{% for page_nr in cases_list.paginator.page_range %}
+				{% if page_nr == cases_list.number %}
+					<li class="active"><span>{{ page_nr }} <span class="sr-only">(current)</span></span></li>
+				{% else %}
+					<li>
+						<a href="{% modify_query page=page_nr %}">{{ page_nr }}</a>
+					</li>
+				{% endif %}
+			{% endfor %}
+			{% if cases_list.has_next %}
+				<li><a href="{% modify_query page=cases_list.next_page_number %}">&laquo;</a></li>
+			{% else %}
+				<li class="disabled"><span>&raquo;</span></li>
+			{% endif %}
+			</ul>
+		{% endif %}
+		</div>
+		</div><!-- closing row paginator -->
+

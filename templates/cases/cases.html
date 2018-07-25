@@ -21,27 +21,9 @@
 			</div>
 		</div>
 		<div class="row" id="cases-list-table">
-			<div class="col-md-10">
-			<table class="table table-striped" id="cases-list">
-				<thead class="text-left">
-					<tr>
-						<th>Query id</th>
-						<th>Platform</th>
-						<th>Date</th>
-						<th>Title</th>
-						<th>Report</th>
-						<th>Status</th>
-					</tr>
-				</thead>
-				<tbody class="text-left">
 
-				</tbody>
-			</table>
-			</div>
 		</div>
-		
-		<div class="row" id="pager">
-		</div>
+
 		
 	</div><!-- closing first column -->
 	<div class="col-md-2"><!-- second column on the left -->
@@ -110,9 +92,9 @@
 				function(response) {
 					if (response['status'] == 'success') {
 						// clean all table content
-						$("#cases-list").children('tbody').empty();
+						$("#cases-list-table").empty();
 						// populate the table with cases
-						$("#cases-list").children('tbody').append(response["case_list"]);
+						$("#cases-list-table").append(response["case_list"]);
 					} else {
 						// print error message in one single cell spanning all columns
 					}

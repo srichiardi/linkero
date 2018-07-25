@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from cases.forms import CaseFilterForm, EbayListingForm
 from cases.models import Cases, Reports, Platforms
 from datetime import datetime, timedelta
@@ -39,6 +40,8 @@ class CasesView(LoginRequiredMixin, View):
                     pltfm_select = [ plt.id for plt in Platforms.objects.all() ] 
                 else:
                     pltfm_select = [pltfm]
+                
+                paginate_by = 20
 
                 cases_queryset = Cases.objects.filter(user=request.user,
                                               platform__in=pltfm_select,
@@ -48,11 +51,22 @@ class CasesView(LoginRequiredMixin, View):
                                               .order_by('-query_id')\
                                               .values('query_id','platform__name','creation_date','query_title','status',
                                                       'report_type__report_name')
-                    
+                
+                paginator = Paginator(cases_query, paginate_by)
+                
+                page_nr = request.GET.get("page")
+                try:
+                    page = paginator.page(page_nr)
+                except PageNotAnInteger:
+                    # show first page if page is missing or is not a number
+                    page = paginator.page(1)
+                except EmptyPage:
+                    # if page is out of range show last page
+                    page = paginator.page(paginator.num_pages)
                 
                 
                 #serialized_cases = list(cases_queryset)
-                cases_table = render_to_string('cases/cases_table.html', {'cases_list' : cases_queryset})
+                cases_table = render_to_string('cases/cases_table.html', {'cases_list' : page})
                                                   
                 return JsonResponse({'status' : 'success',
                                      'case_list' : cases_table
