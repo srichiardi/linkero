@@ -1,4 +1,4 @@
-{% load utility_tags %}
+
 		<div class="row">
 			<div class="col-md-10">
 			<table class="table table-striped" id="cases-list">
@@ -32,7 +32,7 @@
 		{% if cases_list.has_other_pages %}
 			<ul class="pagination">
 			{% if cases_list.has_previous %}
-				<li><a href="{% modify_query page=cases_list.previous_page_number %}">&laquo;</a></li>
+				<li><a href="#">&laquo;</a></li>
 			{% else %}
 				<li class="disabled"><span>&laquo;</span></li>
 			{% endif %}
@@ -41,12 +41,12 @@
 					<li class="active"><span>{{ page_nr }} <span class="sr-only">(current)</span></span></li>
 				{% else %}
 					<li>
-						<a href="{% modify_query page=page_nr %}">{{ page_nr }}</a>
+						<a href="#">{{ page_nr }}</a>
 					</li>
 				{% endif %}
 			{% endfor %}
 			{% if cases_list.has_next %}
-				<li><a href="{% modify_query page=cases_list.next_page_number %}">&laquo;</a></li>
+				<li><a href="#">&laquo;</a></li>
 			{% else %}
 				<li class="disabled"><span>&raquo;</span></li>
 			{% endif %}
