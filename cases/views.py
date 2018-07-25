@@ -52,7 +52,7 @@ class CasesView(LoginRequiredMixin, View):
                                               .values('query_id','platform__name','creation_date','query_title','status',
                                                       'report_type__report_name')
                 
-                paginator = Paginator(cases_query, paginate_by)
+                paginator = Paginator(cases_queryset, paginate_by)
                 
                 page_nr = request.GET.get("page")
                 try:
