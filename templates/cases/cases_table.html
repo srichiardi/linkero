@@ -35,11 +35,11 @@
 			{% if cases_list.has_previous %}
 				<li><a href="#" value="{{ cases_list.previous_page_number }}" class="pager">&laquo;</a></li>
 			{% else %}
-				<li class="disabled"><span>&laquo;</span></li>
+				<li class="disabled"><a href="#">&laquo;</a></li>
 			{% endif %}
 			{% for page_nr in cases_list.paginator.page_range %}
 				{% if page_nr == cases_list.number %}
-					<li class="active"><span>{{ page_nr }} <span class="sr-only">(current)</span></span></li>
+					<li class="active"><a href="#">{{ page_nr }}<span class="sr-only">(current)</span></a></li>
 				{% else %}
 					<li><a href="#" class="pager" value="{{ page_nr }}">{{ page_nr }}</a></li>
 				{% endif %}
@@ -47,7 +47,7 @@
 			{% if cases_list.has_next %}
 				<li><a href="#" class="pager" value="{{ cases_list.next_page_number }}">&raquo;</a></li>
 			{% else %}
-				<li class="disabled"><span>&raquo;</span></li>
+				<li class="disabled"><a href="#">&raquo;</a></li>
 			{% endif %}
 			</ul>
 		{% endif %}
