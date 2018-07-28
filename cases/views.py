@@ -54,7 +54,7 @@ class CasesView(LoginRequiredMixin, View):
                 
                 paginator = Paginator(cases_queryset, paginate_by)
                 
-                page_nr = request.GET.get("page")
+                page_nr = int(form.cleaned_data['page'])
                 try:
                     page = paginator.page(page_nr)
                 except PageNotAnInteger:

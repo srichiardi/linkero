@@ -27,12 +27,13 @@
 			</table>
 			</div>
 		</div>
+
 		<div class="row">
 		<div class="col-md-10">
 		{% if cases_list.has_other_pages %}
 			<ul class="pagination">
 			{% if cases_list.has_previous %}
-				<li><a href="#">&laquo;</a></li>
+				<li><a href="" class="pager">&laquo;</a></li>
 			{% else %}
 				<li class="disabled"><span>&laquo;</span></li>
 			{% endif %}
@@ -41,12 +42,12 @@
 					<li class="active"><span>{{ page_nr }} <span class="sr-only">(current)</span></span></li>
 				{% else %}
 					<li>
-						<a href="#">{{ page_nr }}</a>
+						<a href="" class="pager">{{ page_nr }}</a>
 					</li>
 				{% endif %}
 			{% endfor %}
 			{% if cases_list.has_next %}
-				<li><a href="#">&raquo;</a></li>
+				<li><a href=""class="pager">&raquo;</a></li>
 			{% else %}
 				<li class="disabled"><span>&raquo;</span></li>
 			{% endif %}
@@ -54,4 +55,5 @@
 		{% endif %}
 		</div>
 		</div><!-- closing row paginator -->
+
 

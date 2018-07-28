@@ -35,19 +35,22 @@ class CaseFilterForm(forms.Form):
         required = False
     )
     
+    page = forms.CharField(
+        widget = forms.HiddenInput(attrs={"value" : 1,
+                                          "id" : "page-number"})
+    )
+    
     
 class EbayListingForm(forms.Form):
     
     EBAY_SITES_CHOICES = ((key, globalSiteMap[key]['name']) for key in globalSiteMap.keys())
     
     platform = forms.CharField(
-        widget = forms.HiddenInput(attrs={"id" : "platform_name",
-                                          "value" : 1})
+        widget = forms.HiddenInput(attrs={"value" : 1})
     )
     
     report_type = forms.CharField(
-        widget = forms.HiddenInput(attrs={"id" : "report_type",
-                                          "value" : 1})
+        widget = forms.HiddenInput(attrs={"value" : 1})
     )
     
     ebay_sites = forms.MultipleChoiceField(
