@@ -129,7 +129,8 @@
 	});
 	
 	// GET next page list of cases
-	$('.pager').click(function () {
+	$('.pager').click(function (event) {
+		event.preventDefault();
 		var pageNr = $(this).val();
 		console.log(pageNr);
 		$('#page-number').val(pageNr);
