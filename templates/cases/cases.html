@@ -131,6 +131,7 @@
 	// GET next page list of cases
 	$('.pager').click(function () {
 		var pageNr = $(this).val();
+		console.log(pageNr);
 		$('#page-number').val(pageNr);
 		get_cases();		
 	});
