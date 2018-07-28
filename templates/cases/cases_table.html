@@ -33,7 +33,7 @@
 		{% if cases_list.has_other_pages %}
 			<ul class="pagination">
 			{% if cases_list.has_previous %}
-				<li><a href="" class="pager">&laquo;</a></li>
+				<li class="pager">&laquo;</li>
 			{% else %}
 				<li class="disabled"><span>&laquo;</span></li>
 			{% endif %}
@@ -41,13 +41,12 @@
 				{% if page_nr == cases_list.number %}
 					<li class="active"><span>{{ page_nr }} <span class="sr-only">(current)</span></span></li>
 				{% else %}
-					<li>
-						<a href="" class="pager" value="{{ page_nr }}">{{ page_nr }}</a>
+					<li class="pager" value="{{ page_nr }}">{{ page_nr }}</a>
 					</li>
 				{% endif %}
 			{% endfor %}
 			{% if cases_list.has_next %}
-				<li><a href=""class="pager">&raquo;</a></li>
+				<li class="pager">&raquo;</li>
 			{% else %}
 				<li class="disabled"><span>&raquo;</span></li>
 			{% endif %}
