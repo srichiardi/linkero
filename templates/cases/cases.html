@@ -143,7 +143,8 @@
 	// GET next page list of cases
 	$('.pager').click(function (event) {
 		event.preventDefault();
-		alert("works!");
+		var pageNr = $(this).attr("value");
+		alert("works! " + pageNr);
 		var pageNr = $(this).attr("value");
 		get_cases(pageNr);
 	});
