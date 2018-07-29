@@ -139,14 +139,6 @@
 		);
 	});
 	
-	// GET next page list of cases
-	$('.pager').on("click", function (event) {
-		event.preventDefault();
-		var pageNr = $(this).attr("value");
-		alert("works! " + pageNr);
-		$("#page-number").val(pageNr);
-		get_cases();
-	});
 	
 	$(document).ready(function() {
 		get_cases();
