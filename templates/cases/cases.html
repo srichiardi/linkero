@@ -95,9 +95,8 @@
 	$('.tree-toggle').parent().children('ul.tree').toggle(1000);
 	
 	// load the table function
-	function get_cases(pageNumber) {
+	function get_cases() {
 		var data = $('#case-filter-form').serialize();
-		data["page"] = pageNumber;
 		$.get(
 				'{% url "cases" %}',
 				data,
@@ -145,8 +144,8 @@
 		event.preventDefault();
 		var pageNr = $(this).attr("value");
 		alert("works! " + pageNr);
-		var pageNr = $(this).attr("value");
-		get_cases(pageNr);
+		$("page-number").val(pageNr);
+		get_cases();
 	});
 	
 	$(document).ready(function() {
