@@ -35,7 +35,7 @@
 			{% if cases_list.has_previous %}
 				<li><a href="#" value="{{ cases_list.previous_page_number }}" class="pager">&laquo;</a></li>
 			{% else %}
-				<li class="disabled"><a href="#">&laquo;</a></li>
+				<li class="disabled"><a href="#" class="pager">&laquo;</a></li>
 			{% endif %}
 			{% for page_nr in cases_list.paginator.page_range %}
 				{% if page_nr == cases_list.number %}
