@@ -28,47 +28,38 @@
 			</div>
 		</div>
 
-<!-- 		<div class="row"> -->
-<!-- 		<div class="col-md-10"> -->
-<!-- 		{% if cases_list.has_other_pages %} -->
-<!-- 			<ul class="pagination"> -->
-<!-- 			{% if cases_list.has_previous %} -->
-<!-- 				<li><a href="#" value="{{ cases_list.previous_page_number }}" class="pager">&laquo;</a></li> -->
-<!-- 			{% else %} -->
-<!-- 				<li class="disabled"><a href="#">&laquo;</a></li> -->
-<!-- 			{% endif %} -->
-<!-- 			{% for page_nr in cases_list.paginator.page_range %} -->
-<!-- 				{% if page_nr == cases_list.number %} -->
-<!-- 					<li class="active"><a href="#">{{ page_nr }}<span class="sr-only">(current)</span></a></li> -->
-<!-- 				{% else %} -->
-<!-- 					<li><a href="#" class="pager" value="{{ page_nr }}">{{ page_nr }}</a></li> -->
-<!-- 				{% endif %} -->
-<!-- 			{% endfor %} -->
-<!-- 			{% if cases_list.has_next %} -->
-<!-- 				<li><a href="#" class="pager" value="{{ cases_list.next_page_number }}">&raquo;</a></li> -->
-<!-- 			{% else %} -->
-<!-- 				<li class="disabled"><a href="#">&raquo;</a></li> -->
-<!-- 			{% endif %} -->
-<!-- 			</ul> -->
-<!-- 		{% endif %} -->
-<!-- 		</div> -->
-<!-- 		</div>closing row paginator -->
-
 		<div class="row">
 		<div class="col-md-10">
+		{% if cases_list.has_other_pages %}
 			<ul class="pagination">
+			{% if cases_list.has_previous %}
+				<li><a href="#" value="{{ cases_list.previous_page_number }}" class="pager">&laquo;</a></li>
+			{% else %}
+				<li class="disabled"><a href="#">&laquo;</a></li>
+			{% endif %}
 			{% for page_nr in cases_list.paginator.page_range %}
+				{% if page_nr == cases_list.number %}
+					<li class="active"><a href="#">{{ page_nr }}</a></li>
+				{% else %}
 					<li><a href="#" class="pager" value="{{ page_nr }}">{{ page_nr }}</a></li>
+				{% endif %}
 			{% endfor %}
+			{% if cases_list.has_next %}
+				<li><a href="#" class="pager" value="{{ cases_list.next_page_number }}">&raquo;</a></li>
+			{% else %}
+				<li class="disabled"><a href="#">&raquo;</a></li>
+			{% endif %}
 			</ul>
+		{% endif %}
 		</div>
-		</div><!--  closing row paginator -->
+		</div>
+
+
 		<script>
 		// GET next page list of cases
-		$('.pager').on("click", function (event) {
+		$('.pager').click( function (event) {
 			event.preventDefault();
 			var pageNr = $(this).attr("value");
-			alert("works! " + pageNr);
 			$("#page-number").val(pageNr);
 			get_cases();
 		});
