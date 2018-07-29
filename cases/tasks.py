@@ -7,7 +7,7 @@ from mongoengine import connect
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from cases.ebayapi import EbayApi
-from cases.models import EbayItem, QueryInputs, EbaySellerDetails, InputArgs, ApiErrorLog
+from cases.models import EbayItem, QueryInputs, EbaySellerDetails, InputArgs, ApiErrorLog, Cases
 
 
 @task()
@@ -107,6 +107,11 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
     # update status on mongoDB
     query_input.modify(status='completed')
     query_input.save()
+    
+    # update status on mariaDB
+    case = Cases.objects.get(query_id = query_id)
+    case.status = "completed"
+    case.save()
     
     # delete the file from system
         
