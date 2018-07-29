@@ -140,7 +140,7 @@
 	});
 	
 	// GET next page list of cases
-	$('.pager').click(function (event) {
+	$('.pager').on("click", function (event) {
 		event.preventDefault();
 		var pageNr = $(this).attr("value");
 		alert("works! " + pageNr);
