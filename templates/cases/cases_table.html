@@ -54,4 +54,12 @@
 <!-- 		</div> -->
 <!-- 		</div>closing row paginator -->
 
-
+		<div class="row">
+		<div class="col-md-10">
+			<ul class="pagination">
+			{% for page_nr in cases_list.paginator.page_range %}
+					<li><a href="#" class="pager" value="{{ page_nr }}">{{ page_nr }}</a></li>
+			{% endfor %}
+			</ul>
+		</div>
+		</div><!--  closing row paginator -->
