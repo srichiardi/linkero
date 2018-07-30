@@ -10,7 +10,7 @@
     <form class="form-signin" action="{% url 'login' %}" method="post">
     {% csrf_token %}
       
-      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+      <h1 class="h3 mb-3 font-weight-normal">Linkero Sign-in</h1>
       	{% if form.errors %}
 		<p>
 		Your username and/or password not found.
@@ -18,16 +18,16 @@
 		</p>
 		{% endif %}
       <label for="id_username" class="sr-only">Email</label>
-      {{ form.username }}
+      <input type="text" name="username" class="form-control" autofocus required id="id_username" maxlength="254" placeholder="username"/>
       <label for="id_password" class="sr-only">Password</label>
-      {{ form.password }}
+      <input type="password" name="password" class="form-control" required id="id_password" placeholder="password"/>
       <div class="checkbox mb-3">
         <label>
           <input type="checkbox" value="remember-me"> Remember me
         </label>
       </div>
       <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-      <p class="mt-5 mb-3 text-muted">Linkero &copy; 2017-2018</p>
+      <p class="mt-5 mb-3 text-muted">Linkero &copy; 2018</p>
     </form>
 
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
