@@ -96,6 +96,12 @@
 				data,
 				function(response) {
 					if (response['status'] == 'success') {
+						// stop loading animation
+						
+						// reactivate submit case button
+						
+						// close modal
+						
 						// clean all table content
 						$("#cases-list-table").empty();
 						// populate the table with cases
@@ -116,21 +122,52 @@
 	// post a case with ajax
 	$('#ebay-listing-form').submit(function(event) {
 		event.preventDefault();
-		console.log("form submitted!");  // sanity check
+		// disable "submit case" button
+		
+		// start loading animation
+		
 		var data = $('#ebay-listing-form').serialize();
 		$.post(
 				'{% url "cases" %}',
 				data,
 				function(response){
 					if (response['status'] == 'success') {
+						// stop loading
+						// print success message
+						// re-enable case submit button
 						// close modal
 						// reload table
 						get_cases();
 					} else {
 						// print error message in the modal
+						// re-enable case submit button
 					};
 				}
 		);
+	});
+	
+	// select all EU checkboxes
+	$("#select-eu").click( function() {
+		var euCountries = ["GB", "AT", "BE-FR", "FR", "DE", "IT", "BE-NL", "NL", "ES", "IE", "PL"]
+		$("#ebay-sites").find(":checkbox").each(function() {
+			if ( euCountries.indexOf( $(this).val() ) > 0 ) { 
+				$(this).prop('checked', true); 
+			} else { $(this).prop('checked', false); }
+		});
+	});
+
+	// select all checkboxes
+	$("#select-all").click( function() {
+		$("#ebay-sites").find(":checkbox").each(function() {
+			$(this).prop('checked', true);
+		});
+	});
+
+	// clear all checkboxes
+	$("#clear-all").click( function() {
+		$("#ebay-sites").find(":checkbox").each(function() {
+			$(this).prop('checked', false);
+		});
 	});
 	
 	
