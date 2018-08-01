@@ -129,8 +129,10 @@
 						// print success message
 						
 						// re-enable case submit button
-						$('#lstg-sbmt-btn').removeClass('disabled');
-						$('#lstg-sbmt-btn').html('Create');
+						setTimeout(function(){
+							$('#lstg-sbmt-btn').removeClass('disabled');
+							$('#lstg-sbmt-btn').html('Create');
+						}, 2000);
 						// clean up inputs
 						$("input[name='seller_id']" ).val('');
 						$("input[name='keywords']" ).val('');
@@ -140,7 +142,7 @@
 						// reload table
 						get_cases();
 						// close modal
-						$('#ebay-listing-form').modal().hide();
+						$('#ebay-listing-modal').modal('toggle');
 					} else {
 						// print error message in the modal
 						// re-enable case submit button
