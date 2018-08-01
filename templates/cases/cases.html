@@ -96,12 +96,6 @@
 				data,
 				function(response) {
 					if (response['status'] == 'success') {
-						// stop loading animation
-						
-						// reactivate submit case button
-						
-						// close modal
-						
 						// clean all table content
 						$("#cases-list-table").empty();
 						// populate the table with cases
@@ -123,21 +117,30 @@
 	$('#ebay-listing-form').submit(function(event) {
 		event.preventDefault();
 		// disable "submit case" button
-		
+		$('#lstg-sbmt-btn').addClass('disabled');
 		// start loading animation
-		
+		$('#lstg-sbmt-btn').html('<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Creating');
 		var data = $('#ebay-listing-form').serialize();
 		$.post(
 				'{% url "cases" %}',
 				data,
 				function(response){
 					if (response['status'] == 'success') {
-						// stop loading
 						// print success message
+						
 						// re-enable case submit button
-						// close modal
+						$('#lstg-sbmt-btn').removeClass('disabled');
+						$('#lstg-sbmt-btn').html('Create');
+						// clean up inputs
+						$(':input','#ebay-listing-form')
+						.not(':button, :submit, :reset, :hidden')
+						.val('')
+						.removeAttr('checked')
+						.removeAttr('selected');
 						// reload table
 						get_cases();
+						// close modal
+						$('#ebay-listing-form').modal('toggle');
 					} else {
 						// print error message in the modal
 						// re-enable case submit button
