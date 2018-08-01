@@ -132,11 +132,11 @@
 						$('#lstg-sbmt-btn').removeClass('disabled');
 						$('#lstg-sbmt-btn').html('Create');
 						// clean up inputs
-						$(':input','#ebay-listing-form')
-						.not(':button, :submit, :reset, :hidden')
-						.val('')
-						.removeAttr('checked')
-						.removeAttr('selected');
+						$("input[name='seller_id']" ).val('');
+						$("input[name='keywords']" ).val('');
+						$("#ebay-sites").find(":checkbox").each(function() {
+							$(this).prop('checked', false);
+						});
 						// reload table
 						get_cases();
 						// close modal
@@ -151,6 +151,29 @@
 	
 	$(document).ready(function() {
 		get_cases();
+		
+		$("#select-eu").click( function() {
+			var euCountries = ["GB", "AT", "BE-FR", "FR", "DE", "IT", "BE-NL", "NL", "ES", "IE", "PL"]
+			$("#ebay-sites").find(":checkbox").each(function() {
+				if ( euCountries.indexOf( $(this).val() ) > 0 ) { 
+					$(this).prop('checked', true); 
+				} else { $(this).prop('checked', false); }
+			});
+		});
+
+		// select all checkboxes
+		$("#select-all").click( function() {
+			$("#ebay-sites").find(":checkbox").each(function() {
+				$(this).prop('checked', true);
+			});
+		});
+
+		// clear all checkboxes
+		$("#clear-all").click( function() {
+			$("#ebay-sites").find(":checkbox").each(function() {
+				$(this).prop('checked', false);
+			});
+		});
 	});
 	
 </script>
