@@ -2,7 +2,7 @@ from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
 from mongoengine import Document, EmbeddedDocument, DynamicDocument, DynamicEmbeddedDocument
-from mongoengine.fields import StringField, IntField, ListField, DecimalField, EmbeddedDocumentField, BooleanField, DateTimeField
+from mongoengine.fields import StringField, IntField, ListField, DecimalField, EmbeddedDocumentField, BooleanField, DateTimeField, SequenceField
 
 # Create your MySQL models here.
 class Platforms(models.Model):
@@ -33,6 +33,15 @@ class InputArgs(DynamicEmbeddedDocument):
 
 class QueryInputs(DynamicDocument):
     lnkr_query_id = IntField()
+    lnkr_user_id = IntField()
+    platform = StringField()
+    report_type = StringField()
+    creation_date = DateTimeField(default=datetime.now())
+    status = StringField()
+    input_args = EmbeddedDocumentField(InputArgs, default=InputArgs())
+    
+class CaseDetails(DynamicDocument):
+    lnkr_query_id = SequenceField()
     lnkr_user_id = IntField()
     platform = StringField()
     report_type = StringField()
