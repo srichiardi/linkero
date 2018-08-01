@@ -150,9 +150,9 @@
 	});
 	
 	$("#select-eu").click( function() {
-		var euCountries = ["GB", "AT", "BE-FR", "FR", "DE", "IT", "BE-NL", "NL", "ES", "IE", "PL"]
+		var euCountries = ["GB", "AT", "BE-FR", "FR", "DE", "IT", "BE-NL", "NL", "ES", "IE", "PL", "CH"]
 		$("#ebay-sites").find(":checkbox").each(function() {
-			if ( euCountries.indexOf( $(this).val() ) > 0 ) { 
+			if ( euCountries.indexOf( $(this).val() ) > -1 ) { 
 				$(this).prop('checked', true); 
 			} else { $(this).prop('checked', false); }
 		});
