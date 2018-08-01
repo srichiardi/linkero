@@ -140,7 +140,7 @@
 						// reload table
 						get_cases();
 						// close modal
-						$('#ebay-listing-form').modal('toggle');
+						$('#ebay-listing-form').modal().hide();
 					} else {
 						// print error message in the modal
 						// re-enable case submit button
@@ -148,36 +148,6 @@
 				}
 		);
 	});
-	
-	// select all EU checkboxes
-	$("#select-eu").click( function() {
-		var euCountries = ["GB", "AT", "BE-FR", "FR", "DE", "IT", "BE-NL", "NL", "ES", "IE", "PL"]
-		$("#ebay-sites").find(":checkbox").each(function() {
-			if ( euCountries.indexOf( $(this).val() ) > 0 ) { 
-				$(this).prop('checked', true); 
-			} else { $(this).prop('checked', false); }
-		});
-	});
-
-	// select all checkboxes
-	$("#select-all").click( function() {
-		$("#ebay-sites").find(":checkbox").each(function() {
-			$(this).prop('checked', true);
-		});
-	});
-
-	// clear all checkboxes
-	$("#clear-all").click( function() {
-		$("#ebay-sites").find(":checkbox").each(function() {
-			$(this).prop('checked', false);
-		});
-	});
-	
-	
-	$(document).ready(function() {
-		get_cases();
-	});
-	
 	
 </script>
 {% endblock %}
