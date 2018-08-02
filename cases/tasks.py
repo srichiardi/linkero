@@ -90,7 +90,7 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
             "BusinessSellerDetails.TradeRegistrationNumber", "BusinessSellerDetails.VATDetails.VATID", 
             "BusinessSellerDetails.VATDetails.VATPercent", "BusinessSellerDetails.VATDetails.VATSite", "Seller.FeedbackScore", 
             "Seller.PositiveFeedbackPercent"]
-    #df = df.drop(['PictureURL', 'ViewItemURLForNaturalSearch'], axis=1)
+    ##df = df.drop(['PictureURL', 'ViewItemURLForNaturalSearch'], axis=1)
     df.to_csv(file_name, sep='\t', encoding='utf-8', index=False)
     #logger.info('created file')
     
