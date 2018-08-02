@@ -129,18 +129,20 @@
 						// print success message
 						
 						// re-enable case submit button
-						$('#lstg-sbmt-btn').removeClass('disabled');
-						$('#lstg-sbmt-btn').html('Create');
+						setTimeout(function(){
+							$('#lstg-sbmt-btn').removeClass('disabled');
+							$('#lstg-sbmt-btn').html('Create');
+						}, 2000);
 						// clean up inputs
-						$(':input','#ebay-listing-form')
-						.not(':button, :submit, :reset, :hidden')
-						.val('')
-						.removeAttr('checked')
-						.removeAttr('selected');
+						$("input[name='seller_id']" ).val('');
+						$("input[name='keywords']" ).val('');
+						$("#ebay-sites").find(":checkbox").each(function() {
+							$(this).prop('checked', false);
+						});
 						// reload table
 						get_cases();
 						// close modal
-						$('#ebay-listing-form').modal('toggle');
+						$('#ebay-listing-modal').modal('toggle');
 					} else {
 						// print error message in the modal
 						// re-enable case submit button
@@ -149,11 +151,10 @@
 		);
 	});
 	
-	// select all EU checkboxes
 	$("#select-eu").click( function() {
-		var euCountries = ["GB", "AT", "BE-FR", "FR", "DE", "IT", "BE-NL", "NL", "ES", "IE", "PL"]
+		var euCountries = ["GB", "AT", "BE-FR", "FR", "DE", "IT", "BE-NL", "NL", "ES", "IE", "PL", "CH"]
 		$("#ebay-sites").find(":checkbox").each(function() {
-			if ( euCountries.indexOf( $(this).val() ) > 0 ) { 
+			if ( euCountries.indexOf( $(this).val() ) > -1 ) { 
 				$(this).prop('checked', true); 
 			} else { $(this).prop('checked', false); }
 		});
@@ -173,11 +174,9 @@
 		});
 	});
 	
-	
 	$(document).ready(function() {
 		get_cases();
 	});
-	
 	
 </script>
 {% endblock %}
