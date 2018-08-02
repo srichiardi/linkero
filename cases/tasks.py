@@ -79,7 +79,18 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
     df = merge(items_df, sellers_df, left_on='Seller.UserID', right_on='UserID')
     
     file_name = "/home/stefano/linkero_ebay-listings_{}.csv".format(time.strftime("%Y%m%d-%H%M"))
-    df = df.drop(['PictureURL', 'ViewItemURLForNaturalSearch'], axis=1)
+    df = df["Seller.UserID", "ItemID", "ListingStatus", "Location", "Quantity", "QuantitySold", "CurrentPrice.Value",
+            "CurrentPrice.CurrencyID", "Title", "GlobalShipping", "ShipToLocations",
+            "BusinessSellerDetails.AdditionalContactInformation", "BusinessSellerDetails.Address.Street1", 
+            "BusinessSellerDetails.Address.Street2", "BusinessSellerDetails.Address.CityName", 
+            "BusinessSellerDetails.Address.StateOrProvince", "BusinessSellerDetails.Address.CountryName", 
+            "BusinessSellerDetails.Address.Phone", "BusinessSellerDetails.Address.PostalCode", 
+            "BusinessSellerDetails.Address.CompanyName", "BusinessSellerDetails.Address.FirstName", 
+            "BusinessSellerDetails.Address.LastName", "BusinessSellerDetails.Email", "BusinessSellerDetails.LegalInvoice", 
+            "BusinessSellerDetails.TradeRegistrationNumber", "BusinessSellerDetails.VATDetails.VATID", 
+            "BusinessSellerDetails.VATDetails.VATPercent", "BusinessSellerDetails.VATDetails.VATSite", "Seller.FeedbackScore", 
+            "Seller.PositiveFeedbackPercent"]
+    #df = df.drop(['PictureURL', 'ViewItemURLForNaturalSearch'], axis=1)
     df.to_csv(file_name, sep='\t', encoding='utf-8', index=False)
     #logger.info('created file')
     
