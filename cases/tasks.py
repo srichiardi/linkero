@@ -21,19 +21,19 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
     _MONGODB_PORT = 27017
     connect(_MONGODB_NAME, host=_MONGODB_HOST, port=_MONGODB_PORT, username=_MONGODB_USER, password=_MONGODB_PASSWD)
     
-    query_input = QueryInputs(lnkr_query_id = query_id,
-                              lnkr_user_id = user_id,
-                              platform = 'ebay',
-                              report_type = 'listing details',
-                              status = 'running',
-                              input_args = InputArgs(**{ 'seller_id' : seller_id,
-                                            'keywords' : keywords,
-                                            'ebay_sites' : ebay_sites,
-                                            'search_desc' : search_desc
-                                            })
-                              )
-    
-    query_input.save()
+#     query_input = QueryInputs(lnkr_query_id = query_id,
+#                               lnkr_user_id = user_id,
+#                               platform = 'ebay',
+#                               report_type = 'listing details',
+#                               status = 'running',
+#                               input_args = InputArgs(**{ 'seller_id' : seller_id,
+#                                             'keywords' : keywords,
+#                                             'ebay_sites' : ebay_sites,
+#                                             'search_desc' : search_desc
+#                                             })
+#                               )
+#     
+#     query_input.save()
     
     ea = EbayApi()
     

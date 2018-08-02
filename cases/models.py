@@ -45,6 +45,7 @@ class CaseDetails(DynamicDocument):
     lnkr_user_id = IntField()
     platform = StringField()
     report_type = StringField()
+    title = StringField()
     creation_date = DateTimeField(default=datetime.now())
     status = StringField()
     input_args = EmbeddedDocumentField(InputArgs, default=InputArgs())

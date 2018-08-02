@@ -5,11 +5,12 @@ from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from cases.forms import CaseFilterForm, EbayListingForm
-from cases.models import Cases, Reports, Platforms
+from cases.models import Cases, Reports, Platforms, CaseDetails, InputArgs
 from datetime import datetime, timedelta
 from django.http import JsonResponse
 from pyexpat import errors
 from cases.tasks import send_ebay_listing_report
+from mongoengine import connect
 
 
 # Loading the "cases" page and pull filtered cases.
@@ -37,22 +38,29 @@ class CasesView(LoginRequiredMixin, View):
                 
                 pltfm = form.cleaned_data['platform']
                 if pltfm == "0":
-                    pltfm_select = [ plt.id for plt in Platforms.objects.all() ] 
+                    pltfm_select = [ plt.id for plt in Platforms.objects.all() ]
+                    pltfm_name = [ plt.name for plt in Platforms.objects.all() ]
                 else:
                     pltfm_select = [pltfm]
+                    pltfm_name = [Platforms.objects.get(id=int(pltfm)).name]
                 
                 paginate_by = 20
 
-                cases_queryset = Cases.objects.filter(user=request.user,
-                                              platform__in=pltfm_select,
-                                              creation_date__gte=from_datetime,
-                                              creation_date__lte=to_datetime)\
-                                              .select_related('platform', 'report_type')\
-                                              .order_by('-query_id')\
-                                              .values('query_id','platform__name','creation_date','query_title','status',
-                                                      'report_type__report_name')
+#                 cases_queryset = Cases.objects.filter(user=request.user,
+#                                               platform__in=pltfm_select,
+#                                               creation_date__gte=from_datetime,
+#                                               creation_date__lte=to_datetime)\
+#                                               .select_related('platform', 'report_type')\
+#                                               .order_by('-query_id')\
+#                                               .values('query_id','platform__name','creation_date','query_title','status',
+#                                                       'report_type__report_name')
+                                              
+                cases_qset = CaseDetails.objects(lnkr_user_id = request.user.id,
+                                                 platform__in = pltfm_name,
+                                                 creation_date__gte=from_datetime,
+                                                 creation_date__lte=to_datetime).order_by('-lnkr_query_id')
                 
-                paginator = Paginator(cases_queryset, paginate_by)
+                paginator = Paginator(cases_qset, paginate_by)
                 
                 page_nr = int(form.cleaned_data['page'])
                 try:
@@ -86,6 +94,14 @@ class CasesView(LoginRequiredMixin, View):
         
     def post(self, request):
         if request.is_ajax():
+            # connect to Mongo
+            _MONGODB_USER = 'linkero-user'
+            _MONGODB_PASSWD = '123linkero123'
+            _MONGODB_HOST = 'localhost'
+            _MONGODB_NAME = 'linkerodb'
+            _MONGODB_PORT = 27017
+            connect(_MONGODB_NAME, host=_MONGODB_HOST, port=_MONGODB_PORT, username=_MONGODB_USER, password=_MONGODB_PASSWD)
+            
             form = EbayListingForm(request.POST)
             if form.is_valid():
                 if form.cleaned_data['seller_id'].strip():
@@ -94,15 +110,30 @@ class CasesView(LoginRequiredMixin, View):
                     q_title = form.cleaned_data['keywords'].strip()
                 
                 if q_title:
-                    # create a record with input details 
-                    case = Cases(
-                        user = request.user,
-                        platform = Platforms.objects.get(id=form.cleaned_data['platform']),
-                        report_type = Reports.objects.get(report_id = form.cleaned_data['report_type']),
-                        query_title = q_title,
-                        status = 'running')
-                    case.save()
-                    q_id = case.query_id
+                    # create a record with input details
+                    query_input = CaseDetails(lnkr_user_id = request.user.id,
+                              platform = 'ebay',
+                              report_type = 'listing details',
+                              status = 'running',
+                              title = q_title,
+                              input_args = InputArgs(**{ 'seller_id' : form.cleaned_data['seller_id'].strip(),
+                                            'keywords' : form.cleaned_data['keywords'].strip(),
+                                            'ebay_sites' : form.cleaned_data['ebay_sites'],
+                                            'search_desc' : form.cleaned_data['desc_search']
+                                            })
+                              )
+    
+                    query_input.save()
+                    q_id = query_input.lnkr_query_id
+                    
+#                     case = Cases(
+#                         user = request.user,
+#                         platform = Platforms.objects.get(id=form.cleaned_data['platform']),
+#                         report_type = Reports.objects.get(report_id = form.cleaned_data['report_type']),
+#                         query_title = q_title,
+#                         status = 'running')
+#                     case.save()
+#                     q_id = case.query_id
                     
                     # schedule the task
                     send_ebay_listing_report.delay(form.cleaned_data['send_to_email'].strip(),
