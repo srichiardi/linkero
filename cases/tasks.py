@@ -123,13 +123,14 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
     file_attachment.close()
     
     # update status on mongoDB
-    query_input.modify(status='completed')
+    query_input = CaseDetails.objects(lnkr_query_id=query_id)
+    query_input.status='completed'
     query_input.save()
     
     # update status on mariaDB
-    case = Cases.objects.get(query_id = query_id)
-    case.status = "completed"
-    case.save()
+#     case = Cases.objects.get(query_id = query_id)
+#     case.status = "completed"
+#     case.save()
     
     # delete the file from system
         
