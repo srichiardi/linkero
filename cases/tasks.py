@@ -15,21 +15,7 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
 
     # connect to Mongo
     mongo_client = connect('linkerodb', username='linkero-user', password='123linkero123')
-    
-#     query_input = QueryInputs(lnkr_query_id = query_id,
-#                               lnkr_user_id = user_id,
-#                               platform = 'ebay',
-#                               report_type = 'listing details',
-#                               status = 'running',
-#                               input_args = InputArgs(**{ 'seller_id' : seller_id,
-#                                             'keywords' : keywords,
-#                                             'ebay_sites' : ebay_sites,
-#                                             'search_desc' : search_desc
-#                                             })
-#                               )
-#     
-#     query_input.save()
-    
+        
     ea = EbayApi()
     
     #logger = send_ebay_listing_report.get_logger()
@@ -40,7 +26,6 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
     
     #logger.info('starting items details')
     # pull item descriptions for each item
-    
     ebay_item_list = ea.get_multi_items_threaded(items_dict, q_id=query_id)
     
     # pull seller details
@@ -72,22 +57,6 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
     sellers_df = json_normalize(seller_list)
     
     df = merge(items_df, sellers_df, left_on='Seller.UserID', right_on='UserID')
-#     report_headers = ["Seller.UserID", "ItemID", "ListingStatus", "Location", "Quantity", "QuantitySold", "CurrentPrice.Value",
-#             "CurrentPrice.CurrencyID", "Title", "GlobalShipping", "ShipToLocations",
-#             "BusinessSellerDetails.AdditionalContactInformation", "BusinessSellerDetails.Address.Street1", 
-#             "BusinessSellerDetails.Address.Street2", "BusinessSellerDetails.Address.CityName", 
-#             "BusinessSellerDetails.Address.StateOrProvince", "BusinessSellerDetails.Address.CountryName", 
-#             "BusinessSellerDetails.Address.Phone", "BusinessSellerDetails.Address.PostalCode", 
-#             "BusinessSellerDetails.Address.CompanyName", "BusinessSellerDetails.Address.FirstName", 
-#             "BusinessSellerDetails.Address.LastName", "BusinessSellerDetails.Email", "BusinessSellerDetails.LegalInvoice", 
-#             "BusinessSellerDetails.TradeRegistrationNumber", "BusinessSellerDetails.VATDetails.VATID", 
-#             "BusinessSellerDetails.VATDetails.VATPercent", "BusinessSellerDetails.VATDetails.VATSite", "Seller.FeedbackScore", 
-#             "Seller.PositiveFeedbackPercent"]
-#     pd_headers = df.columns.values.tolist()
-#     headers = []
-#     for hdr in report_headers:
-#         if hdr in pd_headers:
-#             headers.append(hdr)
     
     file_name = "/home/stefano/linkero_ebay-listings_{}.csv".format(time.strftime("%Y%m%d-%H%M"))
     df = df[["Seller.UserID", "ItemID", "ListingStatus", "Location", "Quantity", "QuantitySold", "CurrentPrice.Value",
@@ -101,7 +70,7 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
             "BusinessSellerDetails.TradeRegistrationNumber", "BusinessSellerDetails.VATDetails.VATID", 
             "BusinessSellerDetails.VATDetails.VATPercent", "BusinessSellerDetails.VATDetails.VATSite", "Seller.FeedbackScore", 
             "Seller.PositiveFeedbackPercent"]]
-    ##df = df.drop(['PictureURL', 'ViewItemURLForNaturalSearch'], axis=1)
+    
     df.to_csv(file_name, sep='\t', encoding='utf-8', index=False)
     #logger.info('created file')
     
@@ -119,11 +88,6 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
     
     # update status on mongoDB
     CaseDetails.objects(lnkr_query_id=query_id).update(set__status='completed')
-    
-    # update status on mariaDB
-#     case = Cases.objects.get(query_id = query_id)
-#     case.status = "completed"
-#     case.save()
-    
+       
     # delete the file from system
         

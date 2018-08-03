@@ -39,23 +39,12 @@ class CasesView(LoginRequiredMixin, View):
                     to_datetime = from_datetime + timedelta(days=1)
                 
                 pltfm = form.cleaned_data['platform']
-                if pltfm == "0":
-                    pltfm_select = [ plt.id for plt in Platforms.objects.all() ]
+                if pltfm == "all":
                     pltfm_name = [ plt.name for plt in Platforms.objects.all() ]
-                elif pltfm == "1":
-                    pltfm_select = ['ebay']
-                    pltfm_name = ['ebay']
+                else:
+                    pltfm_name = [pltfm]
                 
                 paginate_by = 20
-
-#                 cases_queryset = Cases.objects.filter(user=request.user,
-#                                               platform__in=pltfm_select,
-#                                               creation_date__gte=from_datetime,
-#                                               creation_date__lte=to_datetime)\
-#                                               .select_related('platform', 'report_type')\
-#                                               .order_by('-query_id')\
-#                                               .values('query_id','platform__name','creation_date','query_title','status',
-#                                                       'report_type__report_name')
                                               
                 cases_qset = CaseDetails.objects(lnkr_user_id = request.user.id,
                                                  platform__in = pltfm_name,
@@ -109,7 +98,7 @@ class CasesView(LoginRequiredMixin, View):
                 if q_title:
                     # create a record with input details
                     query_input = CaseDetails(lnkr_user_id = request.user.id,
-                              platform = 'ebay',
+                              platform = 'eBay',
                               report_type = 'listing details',
                               status = 'running',
                               title = q_title,

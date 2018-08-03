@@ -6,8 +6,8 @@ from cases.ebaySettings import globalSiteMap
 
 class CaseFilterForm(forms.Form):
     
-    list_choices = [(0, 'All')]
-    list_choices.extend( [ (plt.id, plt.name) for plt in Platforms.objects.all() ] )
+    list_choices = [('all', 'All')]
+    list_choices.extend( [ (plt.name, plt.name) for plt in Platforms.objects.all() ] )
     PLATFORM_CHOICES = tuple(list_choices)
     #PLATFORM_CHOICES = ( (0, 'All'), (1, 'eBay'), (2, 'MercadoLibre'), (3, 'Alegro'), (4, 'Facebook'))
     
