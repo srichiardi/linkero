@@ -20,6 +20,8 @@ class CasesView(LoginRequiredMixin, View):
         if request.is_ajax():
             form = CaseFilterForm(request.GET)
             if form.is_valid():
+                # connect to mongo
+                mongo_client = connect('linkerodb', username='linkero-user', password='123linkero123')
                 # query the cases table for cases of the user created between dates of one platform
                 if form.cleaned_data['from_date'] == "":
                     # set the date 2 weeks before
