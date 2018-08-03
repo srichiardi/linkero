@@ -59,7 +59,9 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
     df = merge(items_df, sellers_df, left_on='Seller.UserID', right_on='UserID')
     
     file_name = "/home/stefano/linkero_ebay-listings_{}.csv".format(time.strftime("%Y%m%d-%H%M"))
-    df = df[["Seller.UserID", "ItemID", "ListingStatus", "Location", "Quantity", "QuantitySold", "CurrentPrice.Value",
+    # to avoid key errors when a header is not in the dataframe
+    headers = []
+    main_headers = ["Seller.UserID", "ItemID", "ListingStatus", "Location", "Quantity", "QuantitySold", "CurrentPrice.Value",
             "CurrentPrice.CurrencyID", "Title", "GlobalShipping", "ShipToLocations",
             "BusinessSellerDetails.AdditionalContactInformation", "BusinessSellerDetails.Address.Street1", 
             "BusinessSellerDetails.Address.Street2", "BusinessSellerDetails.Address.CityName", 
@@ -69,7 +71,12 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
             "BusinessSellerDetails.Address.LastName", "BusinessSellerDetails.Email", "BusinessSellerDetails.LegalInvoice", 
             "BusinessSellerDetails.TradeRegistrationNumber", "BusinessSellerDetails.VATDetails.VATID", 
             "BusinessSellerDetails.VATDetails.VATPercent", "BusinessSellerDetails.VATDetails.VATSite", "Seller.FeedbackScore", 
-            "Seller.PositiveFeedbackPercent"]]
+            "Seller.PositiveFeedbackPercent"]
+    df_headers = df.columns.values().tolist()
+    for hdr in df_headers:
+        if hdr in main_headers:
+            headers.append(hdr)
+    df = df[headers]
     
     df.to_csv(file_name, sep='\t', encoding='utf-8', index=False)
     #logger.info('created file')
