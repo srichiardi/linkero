@@ -10,6 +10,8 @@
 						<th>Title</th>
 						<th>Report</th>
 						<th>Status</th>
+						<th></th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody class="text-left">
@@ -21,6 +23,8 @@
 					<td>{{ case.title }}</td>
 					<td>{{ case.report_type }}</td>
 					<td>{{ case.status }}</td>
+					<td><a href="#" class="case-info-window" value="{{ case.lnkr_query_id }}"><span class="glyphicon glyphicon-menu-hamburger"></span></a></td>
+					<td><a href="#" class="case-data-download" value="{{ case.lnkr_query_id }}"><span class="glyphicon glyphicon-download"></span></a></td>
 				</tr>
 				{% endfor %}
 				</tbody>
