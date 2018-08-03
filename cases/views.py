@@ -58,7 +58,7 @@ class CasesView(LoginRequiredMixin, View):
                 cases_qset = CaseDetails.objects(lnkr_user_id = request.user.id,
                                                  platform__in = pltfm_name,
                                                  creation_date__gte=from_datetime,
-                                                 creation_date__lte=to_datetime).order_by('-lnkr_query_id')
+                                                 creation_date__lte=to_datetime).order_by('-lnkr_query_id').to_json()
                 
                 paginator = Paginator(cases_qset, paginate_by)
                 

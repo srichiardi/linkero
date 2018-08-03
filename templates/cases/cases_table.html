@@ -15,12 +15,12 @@
 				<tbody class="text-left">
 				{% for case in cases_list %}
 				<tr>
-					<td>{{ case.lnkr_query_id }}</td>
-					<td>{{ case.platform }}</td>
-					<td>{{ case.creation_date|date:"d/m/Y H:i" }}</td>
-					<td>{{ case.title }}</td>
-					<td>{{ case.report_type }}</td>
-					<td>{{ case.status }}</td>
+					<td>{{ case['lnkr_query_id'] }}</td>
+					<td>{{ case['platform'] }}</td>
+					<td>{{ case['creation_date']|date:"d/m/Y H:i" }}</td>
+					<td>{{ case['title'] }}</td>
+					<td>{{ case['report_type'] }}</td>
+					<td>{{ case['status'] }}</td>
 				</tr>
 				{% endfor %}
 				</tbody>
