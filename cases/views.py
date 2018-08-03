@@ -58,7 +58,7 @@ class CasesView(LoginRequiredMixin, View):
                 cases_qset = CaseDetails.objects(lnkr_user_id = request.user.id,
                                                  platform__in = pltfm_name,
                                                  creation_date__gte=from_datetime,
-                                                 creation_date__lte=to_datetime).order_by('-lnkr_query_id').to_json()
+                                                 creation_date__lte=to_datetime).order_by('-lnkr_query_id').get()
                 
                 paginator = Paginator(cases_qset, paginate_by)
                 
@@ -95,12 +95,7 @@ class CasesView(LoginRequiredMixin, View):
     def post(self, request):
         if request.is_ajax():
             # connect to Mongo
-            _MONGODB_USER = 'linkero-user'
-            _MONGODB_PASSWD = '123linkero123'
-            _MONGODB_HOST = 'localhost'
-            _MONGODB_NAME = 'linkerodb'
-            _MONGODB_PORT = 27017
-            connect(_MONGODB_NAME, host=_MONGODB_HOST, port=_MONGODB_PORT, username=_MONGODB_USER, password=_MONGODB_PASSWD)
+            mongo_client = connect('linkerodb', username='linkero-user', password='123linkero123')
             
             form = EbayListingForm(request.POST)
             if form.is_valid():

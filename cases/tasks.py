@@ -14,12 +14,7 @@ from cases.models import EbayItem, QueryInputs, EbaySellerDetails, InputArgs, Ap
 def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=None, keywords=None, ebay_sites=['US'], search_desc=False):
 
     # connect to Mongo
-    _MONGODB_USER = 'linkero-user'
-    _MONGODB_PASSWD = '123linkero123'
-    _MONGODB_HOST = 'localhost'
-    _MONGODB_NAME = 'linkerodb'
-    _MONGODB_PORT = 27017
-    connect(_MONGODB_NAME, host=_MONGODB_HOST, port=_MONGODB_PORT, username=_MONGODB_USER, password=_MONGODB_PASSWD)
+    mongo_client = connect('linkerodb', username='linkero-user', password='123linkero123')
     
 #     query_input = QueryInputs(lnkr_query_id = query_id,
 #                               lnkr_user_id = user_id,
@@ -123,9 +118,7 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
     file_attachment.close()
     
     # update status on mongoDB
-    query_input = CaseDetails.objects(lnkr_query_id=query_id)
-    query_input.status='completed'
-    query_input.save()
+    CaseDetails.objects(lnkr_query_id=query_id).update(set__status='completed')
     
     # update status on mariaDB
 #     case = Cases.objects.get(query_id = query_id)
