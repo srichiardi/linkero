@@ -40,9 +40,9 @@ class CasesView(LoginRequiredMixin, View):
                 if pltfm == "0":
                     pltfm_select = [ plt.id for plt in Platforms.objects.all() ]
                     pltfm_name = [ plt.name for plt in Platforms.objects.all() ]
-                else:
-                    pltfm_select = [pltfm]
-                    pltfm_name = [Platforms.objects.get(id=int(pltfm)).name]
+                elif pltfm == "1":
+                    pltfm_select = ['ebay']
+                    pltfm_name = ['ebay']
                 
                 paginate_by = 20
 
