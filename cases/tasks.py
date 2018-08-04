@@ -1,3 +1,4 @@
+import os
 import time
 import json
 from celery import task
@@ -7,7 +8,7 @@ from mongoengine import connect
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from cases.ebayapi import EbayApi
-from cases.models import EbayItem, QueryInputs, EbaySellerDetails, InputArgs, ApiErrorLog, Cases, CaseDetails
+from cases.models import EbayItem, EbaySellerDetails, ApiErrorLog, CaseDetails
 
 
 @task()
@@ -81,7 +82,8 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
     df.to_csv(file_name, sep='\t', encoding='utf-8', index=False)
     #logger.info('created file')
     
-    MSG_TEXT = 'Hi Stefano,\n\nplease find your query attached.\n\nthanks,\nLinkero'
+    MSG_TEXT = 'Dear {},\n\nplease find the resuts from your query attached.\n\n\
+    thank you for using Linkero!'.format(User.objects.get(id=user_id).username)
     email = EmailMessage(
         'Linkero report: ebay listings',
         MSG_TEXT,
@@ -89,7 +91,8 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
         [to_email]
     )
     file_attachment = open(file_name, 'r')
-    email.attach('ebay_listing_output.csv', file_attachment.read(), 'text/plain')
+    filename = file_name.split('/')[-1]
+    email.attach(filename, file_attachment.read(), 'text/plain')
     email.send(fail_silently=False)
     file_attachment.close()
     
@@ -97,4 +100,4 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
     CaseDetails.objects(lnkr_query_id=query_id).update(set__status='completed')
        
     # delete the file from system
-        
+    os.remove(file_name)

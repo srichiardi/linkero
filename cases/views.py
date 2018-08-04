@@ -112,15 +112,6 @@ class CasesView(LoginRequiredMixin, View):
                     query_input.save()
                     q_id = query_input.lnkr_query_id
                     
-#                     case = Cases(
-#                         user = request.user,
-#                         platform = Platforms.objects.get(id=form.cleaned_data['platform']),
-#                         report_type = Reports.objects.get(report_id = form.cleaned_data['report_type']),
-#                         query_title = q_title,
-#                         status = 'running')
-#                     case.save()
-#                     q_id = case.query_id
-                    
                     # schedule the task
                     send_ebay_listing_report.delay(form.cleaned_data['send_to_email'].strip(),
                                                    query_id = q_id,
@@ -143,4 +134,22 @@ class CasesView(LoginRequiredMixin, View):
                         
                 return JsonResponse({'status' : 'fail',
                                      'errors' : dict(form.errors.items())})
+
+
+class FileDownload(LoginRequiredMixin, View):
+    
+    def get(self, request):
+        if request.is_ajax():
+            query_id = request.GET['query_id']
+            
+            # pull the data from mongoDB
+            
+            # return the file
+            with  open(gcode, 'r') as tmp:
+                filename = tmp.name.split('/')[-1]
+                response = HttpResponse(tmp, content_type='application/text;charset=UTF-8')
+                response['Content-Disposition'] = "attachment; filename=%s" % filename
+                response['X-Accel-Redirect'] = smart_str(path_to_file)
+                return response
+                
                 

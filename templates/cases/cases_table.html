@@ -24,7 +24,11 @@
 					<td>{{ case.report_type }}</td>
 					<td>{{ case.status }}</td>
 					<td><a href="#" class="case-info-window" value="{{ case.lnkr_query_id }}"><span class="glyphicon glyphicon-menu-hamburger"></span></a></td>
+					{% if case.status == 'completed' %}
 					<td><a href="#" class="case-data-download" value="{{ case.lnkr_query_id }}"><span class="glyphicon glyphicon-download"></span></a></td>
+					{% else %}
+					<td></td>
+					{% endif %}
 				</tr>
 				{% endfor %}
 				</tbody>
