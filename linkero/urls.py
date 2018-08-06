@@ -16,11 +16,12 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include, re_path
-from django.contrib.auth.views import login, logout
+from django.contrib.auth.views import login, logout, password_change
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^login/$', login, name='login', kwargs={'redirect_authenticated_user': True}),
     re_path(r'^logout/$', logout, name='logout'),
     re_path(r'^$', include('cases.urls')),
+    re_path(r'^settings/$', password_change, name='password_change', template_name='registration/settings.html'),
 ]
