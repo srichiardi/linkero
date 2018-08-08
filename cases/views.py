@@ -165,10 +165,10 @@ class PasswordChange(LoginRequiredMixin, View):
                 update_session_auth_hash(request, user)
                 return JsonResponse({'status' : 'success'})
             else:
-                return JsonResponse({'status' : 'failed'})
-        else:
-            message = 'not ajax request'
-            return HttpResponse(message)
+                errors = form.non_field_errors
+                return JsonResponse({'status' : 'failed',
+                                     'errors' : errors })
+
     
     def get(self, request):
         form = PasswordChangeForm(request.user)
