@@ -165,7 +165,7 @@ class PasswordChange(LoginRequiredMixin, View):
                 update_session_auth_hash(request, user)
                 return JsonResponse({'status' : 'success'})
             else:
-                errors = form.non_field_errors
+                errors = form.non_field_errors()
                 return JsonResponse({'status' : 'failed',
                                      'errors' : errors })
 
