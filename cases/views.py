@@ -166,8 +166,14 @@ class PasswordChange(LoginRequiredMixin, View):
                 return JsonResponse({'status' : 'success'})
             else:
                 errors = form.non_field_errors()
+                old_pw_err = form.old_password.errors()
+                new_pw_1_err = form.new_password1.errors()
+                new_pw_2_err = form.new_password2.errors()
                 return JsonResponse({'status' : 'failed',
-                                     'errors' : errors })
+                                     'form_errors' : errors,
+                                     'old_pw_err' : old_pw_err,
+                                     'new_pw_1_err' : new_pw_1_err,
+                                     'new_pw_2_err' : new_pw_2_err })
 
     
     def get(self, request):
