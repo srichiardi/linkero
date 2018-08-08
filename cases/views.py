@@ -4,6 +4,7 @@ from django.views.generic import View
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.contrib.auth.forms import PasswordChangeForm
 from cases.forms import CaseFilterForm, EbayListingForm
 from cases.models import Cases, Reports, Platforms, CaseDetails, InputArgs
 from datetime import datetime, timedelta
@@ -153,3 +154,20 @@ class FileDownload(LoginRequiredMixin, View):
                 return response
                 
                 
+class PasswordChange(LoginRequiredMixin, View):
+    
+    def post(self, request):
+        if request.is_ajax():
+            form = PasswordChangeForm(request.user, request.POST)
+            if form.is_valid():
+                user = form.save()
+                update_session_auth_hash(request, user)
+                return JsonResponse({'status' : 'success'})
+            else:
+                return JsonResponse({'status' : 'failed'})
+    
+    def get(self, request):
+        form = PasswordChangeForm(request.user)
+        params = {'form' : form }
+        return render(request, 'registration/password_change.html', params)
+    
