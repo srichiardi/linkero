@@ -12,6 +12,7 @@ from django.http import JsonResponse
 from pyexpat import errors
 from cases.tasks import send_ebay_listing_report
 from mongoengine import connect
+from django.http import HttpResponse
 
 
 # Loading the "cases" page and pull filtered cases.
@@ -165,6 +166,9 @@ class PasswordChange(LoginRequiredMixin, View):
                 return JsonResponse({'status' : 'success'})
             else:
                 return JsonResponse({'status' : 'failed'})
+        else:
+            message = 'not ajax request'
+            return HttpResponse(message)
     
     def get(self, request):
         form = PasswordChangeForm(request.user)
