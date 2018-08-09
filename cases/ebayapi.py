@@ -72,7 +72,7 @@ class EbayApi():
         err_occurred = False
         
         while page <= min(100, tot_pages):
-            items_dict = defaultdict(dict)
+            
             try:
                 result_set = self.find_items(ebay_site = e_site, page_nr = page, keywords = kwd, seller_id = s_id,
                                     search_desc = s_desc)
@@ -84,11 +84,14 @@ class EbayApi():
                 tot_pages = int(result_set['findItemsAdvancedResponse'][0]['paginationOutput'][0]['totalPages'][0])
                 page += 1
                 
-                for item in result_set['findItemsAdvancedResponse'][0]['searchResult'][0]['item']:
-                    items_dict[item['itemId'][0]]['sellerUserName'] = item['sellerInfo'][0]['sellerUserName'][0]
-                    items_dict[item['itemId'][0]]['ebaySite'] = e_site
-                
-                out_q.put(items_dict)
+                results_count = int(result_set['findItemsAdvancedResponse'][0]['searchResult'][0]['@count'])
+                if results_count > 0:
+                    items_dict = defaultdict(dict)
+                    for item in result_set['findItemsAdvancedResponse'][0]['searchResult'][0]['item']:
+                        items_dict[item['itemId'][0]]['sellerUserName'] = item['sellerInfo'][0]['sellerUserName'][0]
+                        items_dict[item['itemId'][0]]['ebaySite'] = e_site
+                    
+                    out_q.put(items_dict)
     
     
     def find_items_multi_sites(self, e_sites=['US'], kwd=None, s_id=None, s_desc=None):

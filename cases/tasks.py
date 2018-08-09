@@ -25,79 +25,92 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
     # search and pull unique list of items matching input criterias
     items_dict, slr_list, find_error_list = ea.find_items_multi_sites(e_sites=ebay_sites, kwd=keywords, s_id=seller_id, s_desc=search_desc)
     
-    #logger.info('starting items details')
-    # pull item descriptions for each item
-    ebay_item_list = ea.get_multi_items_threaded(items_dict, q_id=query_id)
-    
-    # pull seller details
-    seller_list, seller_err_list = ea.get_multiple_sellers(seller_list=slr_list)
-    seller_collection_list = []
-    for slr in seller_list:
-        slr['lnkr_query_id'] = query_id
-        seller_collection_list.append(EbaySellerDetails(**slr))
-    # insert in bulk
-    EbaySellerDetails.objects.insert(seller_collection_list)
-    #logger.info('saved seller details')
-    
-    # save api error messages
-    find_error_list.extend(seller_err_list)
-    error_collection_list = []
-    if find_error_list:
-        for err in find_error_list:
-            err['lnkr_query_id'] = query_id
-            error_collection_list.append(ApiErrorLog(**err))
+    # check if find items search returned results
+    if items_dict:
+        #logger.info('starting items details')
+        # pull item descriptions for each item
+        ebay_item_list = ea.get_multi_items_threaded(items_dict, q_id=query_id)
+        
+        # pull seller details
+        seller_list, seller_err_list = ea.get_multiple_sellers(seller_list=slr_list)
+        seller_collection_list = []
+        for slr in seller_list:
+            slr['lnkr_query_id'] = query_id
+            seller_collection_list.append(EbaySellerDetails(**slr))
         # insert in bulk
-        ApiErrorLog.objects.insert(error_collection_list)
-        #logger.info('saved error logs')
+        EbaySellerDetails.objects.insert(seller_collection_list)
+        #logger.info('saved seller details')
+        
+        # save api error messages
+        find_error_list.extend(seller_err_list)
+        error_collection_list = []
+        if find_error_list:
+            for err in find_error_list:
+                err['lnkr_query_id'] = query_id
+                error_collection_list.append(ApiErrorLog(**err))
+            # insert in bulk
+            ApiErrorLog.objects.insert(error_collection_list)
+            #logger.info('saved error logs')
+        
+        # save the results in a CSV file and send it attached
+        e_items = EbayItem.objects(lnkr_query_id=query_id)
+        items_df = json_normalize(json.loads(e_items.to_json()))
+        
+        #e_sellers = EbaySellerDetails.objects(lnkr_query_id=query_id)
+        sellers_df = json_normalize(seller_list)
+        
+        df = merge(items_df, sellers_df, left_on='Seller.UserID', right_on='UserID')
+        
+        file_name = "/home/stefano/linkero_ebay-listings_{}.csv".format(time.strftime("%Y%m%d-%H%M"))
+        # to avoid key errors when a header is not in the dataframe
+        headers = []
+        main_headers = ["Seller.UserID", "ItemID", "ListingStatus", "Location", "Quantity", "QuantitySold", "CurrentPrice.Value",
+                "CurrentPrice.CurrencyID", "Title", "GlobalShipping", "ShipToLocations",
+                "BusinessSellerDetails.AdditionalContactInformation", "BusinessSellerDetails.Address.Street1", 
+                "BusinessSellerDetails.Address.Street2", "BusinessSellerDetails.Address.CityName", 
+                "BusinessSellerDetails.Address.StateOrProvince", "BusinessSellerDetails.Address.CountryName", 
+                "BusinessSellerDetails.Address.Phone", "BusinessSellerDetails.Address.PostalCode", 
+                "BusinessSellerDetails.Address.CompanyName", "BusinessSellerDetails.Address.FirstName", 
+                "BusinessSellerDetails.Address.LastName", "BusinessSellerDetails.Email", "BusinessSellerDetails.LegalInvoice", 
+                "BusinessSellerDetails.TradeRegistrationNumber", "BusinessSellerDetails.VATDetails.VATID", 
+                "BusinessSellerDetails.VATDetails.VATPercent", "BusinessSellerDetails.VATDetails.VATSite", "Seller.FeedbackScore", 
+                "Seller.PositiveFeedbackPercent"]
+        df_headers = df.columns
+        for hdr in main_headers:
+            if hdr in df_headers:
+                headers.append(hdr)
+        df = df[headers]
+        
+        df.to_csv(file_name, encoding='utf-8', index=False)
+        #logger.info('created file')
+        
+        MSG_TEXT = 'Dear {},\n\nplease find the resuts from your query attached.\n\n\
+        thank you for using Linkero!'.format(User.objects.get(id=user_id).username)
+        email = EmailMessage(
+            'Linkero report: ebay listings',
+            MSG_TEXT,
+            'LinkeroReports@linkero.ie',
+            [to_email]
+        )
+        file_attachment = open(file_name, 'r')
+        filename = file_name.split('/')[-1]
+        email.attach(filename, file_attachment.read(), 'text/plain')
+        email.send(fail_silently=False)
+        file_attachment.close()
+        
+        # delete the file from system
+        os.remove(file_name)
     
-    # save the results in a CSV file and send it attached
-    e_items = EbayItem.objects(lnkr_query_id=query_id)
-    items_df = json_normalize(json.loads(e_items.to_json()))
-    
-    #e_sellers = EbaySellerDetails.objects(lnkr_query_id=query_id)
-    sellers_df = json_normalize(seller_list)
-    
-    df = merge(items_df, sellers_df, left_on='Seller.UserID', right_on='UserID')
-    
-    file_name = "/home/stefano/linkero_ebay-listings_{}.csv".format(time.strftime("%Y%m%d-%H%M"))
-    # to avoid key errors when a header is not in the dataframe
-    headers = []
-    main_headers = ["Seller.UserID", "ItemID", "ListingStatus", "Location", "Quantity", "QuantitySold", "CurrentPrice.Value",
-            "CurrentPrice.CurrencyID", "Title", "GlobalShipping", "ShipToLocations",
-            "BusinessSellerDetails.AdditionalContactInformation", "BusinessSellerDetails.Address.Street1", 
-            "BusinessSellerDetails.Address.Street2", "BusinessSellerDetails.Address.CityName", 
-            "BusinessSellerDetails.Address.StateOrProvince", "BusinessSellerDetails.Address.CountryName", 
-            "BusinessSellerDetails.Address.Phone", "BusinessSellerDetails.Address.PostalCode", 
-            "BusinessSellerDetails.Address.CompanyName", "BusinessSellerDetails.Address.FirstName", 
-            "BusinessSellerDetails.Address.LastName", "BusinessSellerDetails.Email", "BusinessSellerDetails.LegalInvoice", 
-            "BusinessSellerDetails.TradeRegistrationNumber", "BusinessSellerDetails.VATDetails.VATID", 
-            "BusinessSellerDetails.VATDetails.VATPercent", "BusinessSellerDetails.VATDetails.VATSite", "Seller.FeedbackScore", 
-            "Seller.PositiveFeedbackPercent"]
-    df_headers = df.columns
-    for hdr in df_headers:
-        if hdr in main_headers:
-            headers.append(hdr)
-    df = df[headers]
-    
-    df.to_csv(file_name, sep='\t', encoding='utf-8', index=False)
-    #logger.info('created file')
-    
-    MSG_TEXT = 'Dear {},\n\nplease find the resuts from your query attached.\n\n\
-    thank you for using Linkero!'.format(User.objects.get(id=user_id).username)
-    email = EmailMessage(
-        'Linkero report: ebay listings',
-        MSG_TEXT,
-        'LinkeroReports@linkero.ie',
-        [to_email]
-    )
-    file_attachment = open(file_name, 'r')
-    filename = file_name.split('/')[-1]
-    email.attach(filename, file_attachment.read(), 'text/plain')
-    email.send(fail_silently=False)
-    file_attachment.close()
+    else:
+        MSG_TEXT = 'Dear {},\n\nunfortunately your query returned zero results.\n\n\
+        thank you for using Linkero!'.format(User.objects.get(id=user_id).username)
+        email = EmailMessage(
+            'Linkero report: ebay listings',
+            MSG_TEXT,
+            'LinkeroReports@linkero.ie',
+            [to_email]
+        )
     
     # update status on mongoDB
     CaseDetails.objects(lnkr_query_id=query_id).update(set__status='completed')
        
-    # delete the file from system
-    os.remove(file_name)
