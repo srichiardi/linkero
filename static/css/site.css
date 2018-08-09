@@ -4,16 +4,25 @@ body {
 	height:500px;
 	font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
 	font-size: 14px;
+	color: #4d4d4d;
 	line-height: 2;
+	background: linear-gradient(-210deg, #84b9ca, #d9d9d9);
+	height: 100vh;
 }
 
 .navbar-light {
-	background-color: #c5c1c0;
+	background-color: #ffffff;
+	color: #4d4d4d;
 }
 
 .navbar-brand {
 	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
 	font-size: 24px;
+	color: #4d4d4d;
+}
+
+.nav .glyphicon {
+	color: #4d4d4d;
 }
 
 .filter-form-group {
@@ -30,21 +39,25 @@ body {
 }
 
 .row #filter, #cases-list-table {
-	margin: 10px;
+	margin-top: 10px;
+	margin-left: 10px;
+	margin-bottom: 10px;
 	padding: 10px;
 	border-style: solid;
 	border-width: 1px;
-	border-color: #000000;
+	border-color: #c0c0c0;
 	background-color: #ffffff;
 }
 
 
 div #report-selector {
-	margin: 10px;
+	margin-top: 10px;
+	margin-right: 10px;
+	margin-bottom: 10px;
 	padding: 10px;
 	border-style: solid;
 	border-width: 1px;
-	border-color: #000000;
+	border-color: #c0c0c0;
 	background-color: #ffffff;
 }
 
