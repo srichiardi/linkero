@@ -1,6 +1,5 @@
 html,
 body {
-  background: linear-gradient(-210deg, #84b9ca, #d9d9d9);
   height: 100vh;
 }
 
@@ -11,7 +10,7 @@ body {
   align-items: center;
   padding-top: 40px;
   padding-bottom: 40px;
-  background: linear-gradient(-60deg, #62A0CA, #79A8C7);
+  background: linear-gradient(-180deg, #d9d9d9, #e0e0d1);
 }
 
 .form-signin {
