@@ -73,7 +73,7 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
             "BusinessSellerDetails.TradeRegistrationNumber", "BusinessSellerDetails.VATDetails.VATID", 
             "BusinessSellerDetails.VATDetails.VATPercent", "BusinessSellerDetails.VATDetails.VATSite", "Seller.FeedbackScore", 
             "Seller.PositiveFeedbackPercent"]
-    df_headers = df.columns.values().tolist()
+    df_headers = df.columns
     for hdr in df_headers:
         if hdr in main_headers:
             headers.append(hdr)
