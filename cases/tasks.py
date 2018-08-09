@@ -100,6 +100,7 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
         
         # delete the file from system
         os.remove(file_name)
+        query_status = 'completed'
     
     else:
         MSG_TEXT = 'Dear {},\n\nunfortunately your query returned zero results.\n\n\
@@ -110,7 +111,9 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
             'LinkeroReports@linkero.ie',
             [to_email]
         )
+        email.send(fail_silently=False)
+        query_status = 'zero results'
     
     # update status on mongoDB
-    CaseDetails.objects(lnkr_query_id=query_id).update(set__status='completed')
+    CaseDetails.objects(lnkr_query_id=query_id).update(set__status=query_status)
        
