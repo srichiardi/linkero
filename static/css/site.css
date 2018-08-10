@@ -36,11 +36,6 @@ body {
 	width: 120px;
 }
 
-#new-case-btn {
-	width: 40px;
-	height: 40px;
-}
-
 .row #filter, #cases-list-table {
 	margin-top: 10px;
 	margin-left: 10px;
@@ -58,6 +53,21 @@ div #report-selector {
 	margin-right: 10px;
 	margin-bottom: 10px;
 	padding: 10px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #c0c0c0;
+	background-color: #ffffff;
+}
+
+div #password-change-row {
+	margin-top: 10px;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
+
+div #password-change-col {
+	padding: 20px;
 	border-style: solid;
 	border-width: 1px;
 	border-color: #c0c0c0;
