@@ -155,8 +155,30 @@ class FileDownload(LoginRequiredMixin, View):
             
             df = merge(items_df, sellers_df, left_on='Seller.UserID', right_on='UserID')
             
+            file_name = "/home/stefano/{}".format(CaseDetails.objects(lnkr_query_id=query_id).file_name)
+            
+            headers = []
+            main_headers = ["Seller.UserID", "ItemID", "ListingStatus", "Location", "Quantity", "QuantitySold", "CurrentPrice.Value",
+                    "CurrentPrice.CurrencyID", "Title", "GlobalShipping", "ShipToLocations",
+                    "BusinessSellerDetails.AdditionalContactInformation", "BusinessSellerDetails.Address.Street1", 
+                    "BusinessSellerDetails.Address.Street2", "BusinessSellerDetails.Address.CityName", 
+                    "BusinessSellerDetails.Address.StateOrProvince", "BusinessSellerDetails.Address.CountryName", 
+                    "BusinessSellerDetails.Address.Phone", "BusinessSellerDetails.Address.PostalCode", 
+                    "BusinessSellerDetails.Address.CompanyName", "BusinessSellerDetails.Address.FirstName", 
+                    "BusinessSellerDetails.Address.LastName", "BusinessSellerDetails.Email", "BusinessSellerDetails.LegalInvoice", 
+                    "BusinessSellerDetails.TradeRegistrationNumber", "BusinessSellerDetails.VATDetails.VATID", 
+                    "BusinessSellerDetails.VATDetails.VATPercent", "BusinessSellerDetails.VATDetails.VATSite", "Seller.FeedbackScore", 
+                    "Seller.PositiveFeedbackPercent"]
+            df_headers = df.columns
+            for hdr in main_headers:
+                if hdr in df_headers:
+                    headers.append(hdr)
+            df = df[headers]
+            
+            df.to_csv(file_name, encoding='utf-8', index=False)
+            
             # return the file
-            with  open(gcode, 'r') as tmp:
+            with  open(file_name, 'r') as tmp:
                 filename = tmp.name.split('/')[-1]
                 response = HttpResponse(tmp, content_type='application/text;charset=UTF-8')
                 response['Content-Disposition'] = "attachment; filename=%s" % filename
