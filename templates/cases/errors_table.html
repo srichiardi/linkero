@@ -2,4 +2,5 @@
 {% for field in form %}
 	<li>{{ field.error }}</li>
 {% endfor %}
+	<li>{{ form.non_field_errors }}</li>
 </ul>
