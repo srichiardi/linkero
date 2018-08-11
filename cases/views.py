@@ -171,7 +171,7 @@ class PasswordChange(LoginRequiredMixin, View):
                 error_table = render_to_string('cases/errors_table.html', {'form' : form })
                 return JsonResponse({'status' : 'failed',
                                      'form_errors' : error_table,
-                                     'error_list' : dict(form.errors())})
+                                     'error_list' : form.errors.items()})
 
     
     def get(self, request):
