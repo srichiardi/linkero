@@ -49,6 +49,7 @@ class CaseDetails(DynamicDocument):
     creation_date = DateTimeField(default=datetime.now())
     status = StringField()
     input_args = EmbeddedDocumentField(InputArgs, default=InputArgs())
+    file_name = StringField()
     
 class ApiErrorLog(Document):
     platform = StringField()

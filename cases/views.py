@@ -6,13 +6,13 @@ from django.template.loader import render_to_string
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.contrib.auth.forms import PasswordChangeForm
 from cases.forms import CaseFilterForm, EbayListingForm
-from cases.models import Cases, Reports, Platforms, CaseDetails, InputArgs
+from cases.models import Platforms, CaseDetails, InputArgs, EbayItem, EbaySellerDetails
 from datetime import datetime, timedelta
 from django.http import JsonResponse
 from pyexpat import errors
 from cases.tasks import send_ebay_listing_report
 from mongoengine import connect
-from django.http import HttpResponse
+from pandas.io.json import json_normalize
 
 
 # Loading the "cases" page and pull filtered cases.
@@ -142,9 +142,18 @@ class FileDownload(LoginRequiredMixin, View):
     
     def get(self, request):
         if request.is_ajax():
+            # connect to Mongo
+            mongo_client = connect('linkerodb', username='linkero-user', password='123linkero123')
             query_id = request.GET['query_id']
             
             # pull the data from mongoDB
+            e_items = EbayItem.objects(lnkr_query_id=query_id)
+            items_df = json_normalize(json.loads(e_items.to_json()))
+            
+            e_sellers = EbaySellerDetails.objects(lnkr_query_id=query_id)
+            sellers_df = json_normalize(json.loads(e_sellers.to_json()))
+            
+            df = merge(items_df, sellers_df, left_on='Seller.UserID', right_on='UserID')
             
             # return the file
             with  open(gcode, 'r') as tmp:

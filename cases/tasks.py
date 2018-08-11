@@ -85,7 +85,7 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
         #logger.info('created file')
         
         MSG_TEXT = 'Dear {},\n\nplease find the resuts from your query attached.\n\n\
-        thank you for using Linkero!'.format(User.objects.get(id=user_id).username)
+thank you for using Linkero!'.format(User.objects.get(id=user_id).username)
         email = EmailMessage(
             'Linkero report: ebay listings',
             MSG_TEXT,
@@ -101,10 +101,11 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
         # delete the file from system
         os.remove(file_name)
         query_status = 'completed'
+        CaseDetails.objects(lnkr_query_id=query_id).update(set__file_name=filename)
     
     else:
         MSG_TEXT = 'Dear {},\n\nunfortunately your query returned zero results.\n\n\
-        thank you for using Linkero!'.format(User.objects.get(id=user_id).username)
+thank you for using Linkero!'.format(User.objects.get(id=user_id).username)
         email = EmailMessage(
             'Linkero report: ebay listings',
             MSG_TEXT,
