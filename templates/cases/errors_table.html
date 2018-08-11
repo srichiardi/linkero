@@ -1,6 +1,7 @@
 <ul>
-{% for field in form %}
-	<li>{{ field.error }}</li>
+{% for field, errors in form.errors.items %}
+    {% for error in errors %}
+		<li>{{ error }}</li>
+	{% endfor %}
 {% endfor %}
-	<li>{{ form.non_field_errors }}</li>
 </ul>
