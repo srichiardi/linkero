@@ -179,7 +179,7 @@ class FileDownload(LoginRequiredMixin, View):
         df = df[headers]
         
         # return the file
-        csv_file = StringIO
+        csv_file = StringIO()
         writer = csv.DictWriter(csv_file, fieldnames=headers)
         writer.writeheader()
         writer.writerows(df.to_dict('records'))
