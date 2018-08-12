@@ -185,7 +185,7 @@ class FileDownload(LoginRequiredMixin, View):
         writer.writerows(df.to_dict('records'))
         response = HttpResponse(csv_file, content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="linkero_file.csv"'
-        response['Content-Length'] = csv_file.tell()
+        #response['Content-Length'] = csv_file.tell()
         
         #response = HttpResponse(csv_file, content_type='text/palin')
         
