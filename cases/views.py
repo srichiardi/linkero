@@ -10,11 +10,13 @@ from cases.forms import CaseFilterForm, EbayListingForm
 from cases.models import Platforms, CaseDetails, InputArgs, EbayItem, EbaySellerDetails
 from datetime import datetime, timedelta
 from django.http import JsonResponse
+from django.conf.settings import MEDIA_ROOT
 from pyexpat import errors
 from cases.tasks import send_ebay_listing_report
 from mongoengine import connect
 from pandas.io.json import json_normalize
 import json
+import os
 from pandas import merge
 
 
@@ -158,8 +160,8 @@ class FileDownload(LoginRequiredMixin, View):
             
             df = merge(items_df, sellers_df, left_on='Seller.UserID', right_on='UserID')
             
-            file_name = "/home/stefano/{}".format(CaseDetails.objects(lnkr_query_id=query_id).get().file_name)
-            
+            file_name = CaseDetails.objects(lnkr_query_id=query_id).get().file_name
+            file_path = os.path.join(settings.MEDIA_ROOT, file_name)
             headers = []
             main_headers = ["Seller.UserID", "ItemID", "ListingStatus", "Location", "Quantity", "QuantitySold", "CurrentPrice.Value",
                     "CurrentPrice.CurrencyID", "Title", "GlobalShipping", "ShipToLocations",
@@ -178,14 +180,13 @@ class FileDownload(LoginRequiredMixin, View):
                     headers.append(hdr)
             df = df[headers]
             
-            df.to_csv(file_name, encoding='utf-8', index=False)
+            df.to_csv(file_path, encoding='utf-8', index=False)
             
             # return the file
-            with  open(file_name, 'r') as tmp:
-                filename = tmp.name.split('/')[-1]
+            with  open(file_path, 'r') as tmp:
                 response = HttpResponse(tmp, content_type='application/text;charset=UTF-8')
-                response['Content-Disposition'] = "attachment; filename=%s" % filename
-                response['X-Accel-Redirect'] = file_name
+                response['Content-Disposition'] = "attachment; filename=%s" % file_name
+                response['X-Accel-Redirect'] = file_path
                 return response
                 
                 
