@@ -53,7 +53,7 @@
 				{% endif %}
 			{% endfor %}
 			{% if cases_list.has_next %}
-				<li><a href="#" class="pager" value="{{ cases_list.next_page_number }}">&raquo;</a></li>
+				<li><a href="" class="pager" value="{{ cases_list.next_page_number }}">&raquo;</a></li>
 			{% else %}
 				<li class="disabled"><a href="#" class="pager">&raquo;</a></li>
 			{% endif %}
@@ -73,19 +73,27 @@
 		});
 		
 		// GET download file
+// 		$('.case-data-download').click(function(event) {
+// 			event.preventDefault();
+// 			var data = { 'query_id' : $(this).attr('value')};
+// 			$.get(
+// 					'{% url "download_results" %}',
+// 					data,
+// 					function(response) {
+// 						if (response['status'] == 'success') {
+							
+// 						} else {
+							
+// 						}
+// 					}
+// 				)
+// 		});
 		$('.case-data-download').click(function(event) {
-			event.preventDefault();
-			var data = { 'query_id' : $(this).attr('value')};
-			$.get(
-					'{% url "download_results" %}',
-					data,
-					function(response) {
-						if (response['status'] == 'success') {
-							
-						} else {
-							
-						}
-					}
-				)
+ 			event.preventDefault();
+			$.ajax({
+			    url:   '{% url "download_results" %}',
+			    data:  {'query_id': $(this).attr('value')},
+			    async: false
+			});
 		});
 		</script>

@@ -143,48 +143,48 @@ class CasesView(LoginRequiredMixin, View):
 class FileDownload(LoginRequiredMixin, View):
     
     def get(self, request):
-        if request.is_ajax():
-            # connect to Mongo
-            mongo_client = connect('linkerodb', username='linkero-user', password='123linkero123')
-            query_id = int(request.GET['query_id'])
-            
-            # pull the data from mongoDB
-            e_items = EbayItem.objects(lnkr_query_id=query_id)
-            items_df = json_normalize(json.loads(e_items.to_json()))
-            
-            e_sellers = EbaySellerDetails.objects(lnkr_query_id=query_id)
-            sellers_df = json_normalize(json.loads(e_sellers.to_json()))
-            
-            df = merge(items_df, sellers_df, left_on='Seller.UserID', right_on='UserID')
-            
-            file_name = CaseDetails.objects(lnkr_query_id=query_id).get().file_name
-            
-            headers = []
-            main_headers = ["Seller.UserID", "ItemID", "ListingStatus", "Location", "Quantity", "QuantitySold", "CurrentPrice.Value",
-                    "CurrentPrice.CurrencyID", "Title", "GlobalShipping", "ShipToLocations",
-                    "BusinessSellerDetails.AdditionalContactInformation", "BusinessSellerDetails.Address.Street1", 
-                    "BusinessSellerDetails.Address.Street2", "BusinessSellerDetails.Address.CityName", 
-                    "BusinessSellerDetails.Address.StateOrProvince", "BusinessSellerDetails.Address.CountryName", 
-                    "BusinessSellerDetails.Address.Phone", "BusinessSellerDetails.Address.PostalCode", 
-                    "BusinessSellerDetails.Address.CompanyName", "BusinessSellerDetails.Address.FirstName", 
-                    "BusinessSellerDetails.Address.LastName", "BusinessSellerDetails.Email", "BusinessSellerDetails.LegalInvoice", 
-                    "BusinessSellerDetails.TradeRegistrationNumber", "BusinessSellerDetails.VATDetails.VATID", 
-                    "BusinessSellerDetails.VATDetails.VATPercent", "BusinessSellerDetails.VATDetails.VATSite", "Seller.FeedbackScore", 
-                    "Seller.PositiveFeedbackPercent"]
-            df_headers = df.columns
-            for hdr in main_headers:
-                if hdr in df_headers:
-                    headers.append(hdr)
-            df = df[headers]
-            
-            # return the file
-            response = HttpResponse(content_type='text/csv')
-            response['Content-Disposition'] = 'attachment; filename="{}"'.format(file_name)
-            writer = csv.DictWriter(response, fieldnames=headers)
-            writer.writeheader()
-            writer.writerows(df.to_dict('records'))
-            
-            return response
+        #if request.is_ajax():
+        # connect to Mongo
+        mongo_client = connect('linkerodb', username='linkero-user', password='123linkero123')
+        query_id = int(request.GET['query_id'])
+        
+        # pull the data from mongoDB
+        e_items = EbayItem.objects(lnkr_query_id=query_id)
+        items_df = json_normalize(json.loads(e_items.to_json()))
+        
+        e_sellers = EbaySellerDetails.objects(lnkr_query_id=query_id)
+        sellers_df = json_normalize(json.loads(e_sellers.to_json()))
+        
+        df = merge(items_df, sellers_df, left_on='Seller.UserID', right_on='UserID')
+        
+        file_name = CaseDetails.objects(lnkr_query_id=query_id).get().file_name
+        
+        headers = []
+        main_headers = ["Seller.UserID", "ItemID", "ListingStatus", "Location", "Quantity", "QuantitySold", "CurrentPrice.Value",
+                "CurrentPrice.CurrencyID", "Title", "GlobalShipping", "ShipToLocations",
+                "BusinessSellerDetails.AdditionalContactInformation", "BusinessSellerDetails.Address.Street1", 
+                "BusinessSellerDetails.Address.Street2", "BusinessSellerDetails.Address.CityName", 
+                "BusinessSellerDetails.Address.StateOrProvince", "BusinessSellerDetails.Address.CountryName", 
+                "BusinessSellerDetails.Address.Phone", "BusinessSellerDetails.Address.PostalCode", 
+                "BusinessSellerDetails.Address.CompanyName", "BusinessSellerDetails.Address.FirstName", 
+                "BusinessSellerDetails.Address.LastName", "BusinessSellerDetails.Email", "BusinessSellerDetails.LegalInvoice", 
+                "BusinessSellerDetails.TradeRegistrationNumber", "BusinessSellerDetails.VATDetails.VATID", 
+                "BusinessSellerDetails.VATDetails.VATPercent", "BusinessSellerDetails.VATDetails.VATSite", "Seller.FeedbackScore", 
+                "Seller.PositiveFeedbackPercent"]
+        df_headers = df.columns
+        for hdr in main_headers:
+            if hdr in df_headers:
+                headers.append(hdr)
+        df = df[headers]
+        
+        # return the file
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="{}"'.format(file_name)
+        writer = csv.DictWriter(response, fieldnames=headers)
+        writer.writeheader()
+        writer.writerows(df.to_dict('records'))
+        
+        return response
                 
                 
 class PasswordChange(LoginRequiredMixin, View):
