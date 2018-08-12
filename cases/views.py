@@ -178,10 +178,12 @@ class FileDownload(LoginRequiredMixin, View):
                 headers.append(hdr)
         df = df[headers]
         
+        df.to_csv('/home/stefano/linkero.csv', encoding='utf-8', index=False)
+        
         # return the file
-        csv_file = BytesIO()
+        csv_file = open('/home/stefano/linkero.csv', 'r')
         writer = csv.DictWriter(csv_file, fieldnames=headers)
-        #writer.writeheader()
+        writer.writeheader()
         writer.writerows(df.to_dict('records'))
         response = HttpResponse(csv_file, content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="linkero_file.csv"'
