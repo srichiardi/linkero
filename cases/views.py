@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.contrib.auth.forms import PasswordChangeForm
+from django.http import HttpResponse
 from cases.forms import CaseFilterForm, EbayListingForm
 from cases.models import Platforms, CaseDetails, InputArgs, EbayItem, EbaySellerDetails
 from datetime import datetime, timedelta
