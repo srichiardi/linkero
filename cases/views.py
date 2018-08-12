@@ -180,7 +180,7 @@ class FileDownload(LoginRequiredMixin, View):
         
         # return the file
         #csv_file = StringIO
-        response = HttpResponse(content_type='text/csv')
+        response = HttpResponse(content_type='application/force-download')
         response['Content-Disposition'] = 'attachment; filename="linkero_file.csv"'
         writer = csv.DictWriter(response, fieldnames=headers)
         writer.writeheader()
