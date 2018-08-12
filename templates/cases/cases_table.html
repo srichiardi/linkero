@@ -71,4 +71,21 @@
 			$("#page-number").val(pageNr);
 			get_cases();
 		});
+		
+		// GET download file
+		$('.case-data-download').click(function(event) {
+			event.preventDefault();
+			var data = { 'query_id' : $(this).attr('value')};
+			$.get(
+					'{% url "download_results" %}',
+					data,
+					function(response) {
+						if (response['status'] == 'success') {
+							
+						} else {
+							
+						}
+					}
+				)
+		});
 		</script>
