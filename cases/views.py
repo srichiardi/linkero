@@ -14,6 +14,7 @@ from cases.tasks import send_ebay_listing_report
 from mongoengine import connect
 from pandas.io.json import json_normalize
 import json
+from pandas import merge
 
 
 # Loading the "cases" page and pull filtered cases.
