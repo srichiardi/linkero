@@ -15,6 +15,7 @@ from cases.tasks import send_ebay_listing_report
 from mongoengine import connect
 from pandas.io.json import json_normalize
 from pandas import merge
+from io import StringIO
 
 
 # Loading the "cases" page and pull filtered cases.
@@ -178,11 +179,13 @@ class FileDownload(LoginRequiredMixin, View):
         df = df[headers]
         
         # return the file
+        #csv_file = StringIO
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="{}"'.format(file_name)
+        response['Content-Disposition'] = 'attachment; filename="linkero_file.csv"'
         writer = csv.DictWriter(response, fieldnames=headers)
         writer.writeheader()
         writer.writerows(df.to_dict('records'))
+        #response = HttpResponse(csv_file, content_type='text/palin')
         
         return response
                 
