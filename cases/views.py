@@ -1,3 +1,5 @@
+import json
+import csv
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
@@ -5,17 +7,13 @@ from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.contrib.auth.forms import PasswordChangeForm
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from cases.forms import CaseFilterForm, EbayListingForm
 from cases.models import Platforms, CaseDetails, InputArgs, EbayItem, EbaySellerDetails
 from datetime import datetime, timedelta
-from django.http import JsonResponse
-from pyexpat import errors
 from cases.tasks import send_ebay_listing_report
 from mongoengine import connect
 from pandas.io.json import json_normalize
-import json
-import os
 from pandas import merge
 
 
