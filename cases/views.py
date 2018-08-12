@@ -181,7 +181,7 @@ class FileDownload(LoginRequiredMixin, View):
         df.to_csv('/home/stefano/linkero.csv', encoding='utf-8', index=False)
         
         # return the file
-        csv_file = open('/home/stefano/linkero.csv', 'r')
+        csv_file = open('/home/stefano/linkero.csv', 'rb')
 #         writer = csv.DictWriter(csv_file, fieldnames=headers)
 #         writer.writeheader()
 #         writer.writerows(df.to_dict('records'))
