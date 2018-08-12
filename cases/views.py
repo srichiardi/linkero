@@ -157,7 +157,7 @@ class FileDownload(LoginRequiredMixin, View):
             
             df = merge(items_df, sellers_df, left_on='Seller.UserID', right_on='UserID')
             
-            file_name = "/home/stefano/{}".format(CaseDetails.objects(lnkr_query_id=query_id).file_name)
+            file_name = "/home/stefano/{}".format(CaseDetails.objects(lnkr_query_id=query_id).get().file_name)
             
             headers = []
             main_headers = ["Seller.UserID", "ItemID", "ListingStatus", "Location", "Quantity", "QuantitySold", "CurrentPrice.Value",
