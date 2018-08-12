@@ -185,7 +185,7 @@ class FileDownload(LoginRequiredMixin, View):
                 filename = tmp.name.split('/')[-1]
                 response = HttpResponse(tmp, content_type='application/text;charset=UTF-8')
                 response['Content-Disposition'] = "attachment; filename=%s" % filename
-                response['X-Accel-Redirect'] = smart_str(path_to_file)
+                response['X-Accel-Redirect'] = file_name
                 return response
                 
                 
