@@ -10,7 +10,6 @@ from cases.forms import CaseFilterForm, EbayListingForm
 from cases.models import Platforms, CaseDetails, InputArgs, EbayItem, EbaySellerDetails
 from datetime import datetime, timedelta
 from django.http import JsonResponse
-from django.conf.settings import MEDIA_ROOT
 from pyexpat import errors
 from cases.tasks import send_ebay_listing_report
 from mongoengine import connect
@@ -161,7 +160,7 @@ class FileDownload(LoginRequiredMixin, View):
             df = merge(items_df, sellers_df, left_on='Seller.UserID', right_on='UserID')
             
             file_name = CaseDetails.objects(lnkr_query_id=query_id).get().file_name
-            file_path = os.path.join(settings.MEDIA_ROOT, file_name)
+            
             headers = []
             main_headers = ["Seller.UserID", "ItemID", "ListingStatus", "Location", "Quantity", "QuantitySold", "CurrentPrice.Value",
                     "CurrentPrice.CurrencyID", "Title", "GlobalShipping", "ShipToLocations",
@@ -180,14 +179,14 @@ class FileDownload(LoginRequiredMixin, View):
                     headers.append(hdr)
             df = df[headers]
             
-            df.to_csv(file_path, encoding='utf-8', index=False)
-            
             # return the file
-            with  open(file_path, 'r') as tmp:
-                response = HttpResponse(tmp, content_type='application/text;charset=UTF-8')
-                response['Content-Disposition'] = "attachment; filename=%s" % file_name
-                response['X-Accel-Redirect'] = file_path
-                return response
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="{}"'.format(file_name)
+            writer = csv.DictWriter(response, fieldnames=headers)
+            writer.writeheader()
+            writer.writerows(df.to_dict('records'))
+            
+            return response
                 
                 
 class PasswordChange(LoginRequiredMixin, View):
