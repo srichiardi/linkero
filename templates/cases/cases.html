@@ -113,6 +113,22 @@
 		get_cases();
 	});
 	
+	// GET download file
+	$('.case-data-download').click(function() {
+		var data = { 'query_id' : $(this).attr('value')};
+		$.get(
+				'{% url "download_results" %}',
+				data,
+				function(response) {
+					if (response['status'] == 'success') {
+						
+					} else {
+						
+					}
+				}
+			)
+	});
+	
 	// post a case with ajax
 	$('#ebay-listing-form').submit(function(event) {
 		event.preventDefault();

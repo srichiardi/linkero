@@ -144,7 +144,7 @@ class FileDownload(LoginRequiredMixin, View):
         if request.is_ajax():
             # connect to Mongo
             mongo_client = connect('linkerodb', username='linkero-user', password='123linkero123')
-            query_id = request.GET['query_id']
+            query_id = int(request.GET['query_id'])
             
             # pull the data from mongoDB
             e_items = EbayItem.objects(lnkr_query_id=query_id)
