@@ -98,12 +98,12 @@ thank you for using Linkero!'.format(User.objects.get(id=user_id).username)
         writer = DictWriter(file_attachment, fieldnames=headers)
         writer.writeheader()
         writer.writerows(df.to_dict('records'))
+        file_attachment.seek(0)
         email.attach(filename, file_attachment.read(), 'text/csv')
         email.send(fail_silently=False)
         file_attachment.close()
         
         # delete the file from system
-        #os.remove(file_name)
         query_status = 'completed'
         CaseDetails.objects(lnkr_query_id=query_id).update(set__file_name=filename)
     
