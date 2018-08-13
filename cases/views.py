@@ -142,16 +142,6 @@ class CasesView(LoginRequiredMixin, View):
                                      'errors' : dict(form.errors.items())})
 
 
-
-class Echo:
-    """An object that implements just the write method of the file-like
-    interface.
-    """
-    def write(self, value):
-        """Write the value by returning it, instead of storing in a buffer."""
-        return value
-
-
 class FileDownload(LoginRequiredMixin, View):
     
     def get(self, request):
@@ -197,19 +187,27 @@ class FileDownload(LoginRequiredMixin, View):
 #         writer = csv.DictWriter(csv_file, fieldnames=headers)
 #         writer.writeheader()
 #         writer.writerows(df.to_dict('records'))
-#         response = HttpResponse(FileWrapper(csv_file), content_type='text/csv')
+#         response = HttpResponse(content_type='text/csv')
+#         response.write(csv_file)
 #         response['Content-Disposition'] = 'attachment;filename=linkero_file.csv'
-        
-        pseudo_buffer = Echo()
-        writer = csv.DictWriter(pseudo_buffer, fieldnames=headers)
-        
-        response = StreamingHttpResponse((writer.writerow(row) for row in df.to_dict('records')), content_type="text/csv")
-        response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+#         
+#         pseudo_buffer = Echo()
+#         writer = csv.DictWriter(pseudo_buffer, fieldnames=headers)
+#         
+#         response = StreamingHttpResponse((writer.writerow(row) for row in df.to_dict('records')), content_type="text/csv")
+#         response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
         
         #response['Content-Length'] = csv_file.tell()
         
         #response = HttpResponse(csv_file, content_type='text/palin')
         
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+    
+        writer = csv.writer(response)
+        writer.writerow(['First row', 'Foo', 'Bar', 'Baz'])
+        writer.writerow(['Second row', 'A', 'B', 'C', '"Testing"', "Here's a quote"])
+    
         return response
                 
                 
