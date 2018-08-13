@@ -178,7 +178,7 @@ class FileDownload(LoginRequiredMixin, View):
                 headers.append(hdr)
         df = df[headers]
         
-        response = HttpResponse(csv_file, content_type='text/csv')
+        response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment;filename=linkero_file.csv'
         
         #df.to_csv('/home/stefano/linkero.csv', encoding='utf-8', index=False)
