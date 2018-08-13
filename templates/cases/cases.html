@@ -174,14 +174,6 @@
 		});
 	});
 	
-	$('.case-data-download').click(function(event) {
-		event.preventDefault();
-        var form = $('<form method="GET" action="' + url + '">');
-        form.append($('<input type="hidden" name="query_id" value="' + $(this).attr('value') + '">'));
-        $('body').append(form);
-        form.submit();
-	});
-	
 	$(document).ready(function() {
 		get_cases();
 	});
