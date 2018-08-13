@@ -23,7 +23,7 @@
 					<td>{{ case.title }}</td>
 					<td>{{ case.report_type }}</td>
 					<td>{{ case.status }}</td>
-					<td><a href='/download_results/?query_id={{ case.lnkr_query_id }}'><span class="glyphicon glyphicon-menu-hamburger"></span></a></td>
+					<td><a href='./download_results/?query_id={{ case.lnkr_query_id }}'><span class="glyphicon glyphicon-menu-hamburger"></span></a></td>
 					{% if case.status == 'completed' %}
 					<td><a href="#" class="case-data-download"><span class="glyphicon glyphicon-download"></span></a></td>
 					{% else %}
