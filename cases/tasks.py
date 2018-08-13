@@ -1,6 +1,8 @@
 import os
 import time
 import json
+from csv import DictWriter
+from io import StringIO
 from celery import task
 from pandas import merge
 from pandas.io.json import json_normalize
@@ -61,7 +63,7 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
         
         df = merge(items_df, sellers_df, left_on='Seller.UserID', right_on='UserID')
         
-        file_name = "/home/stefano/linkero_ebay-listings_{}.csv".format(time.strftime("%Y%m%d-%H%M"))
+        filename = "linkero_ebay-listings_{}.csv".format(time.strftime("%Y%m%d-%H%M"))
         # to avoid key errors when a header is not in the dataframe
         headers = []
         main_headers = ["Seller.UserID", "ItemID", "ListingStatus", "Location", "Quantity", "QuantitySold", "CurrentPrice.Value",
@@ -81,7 +83,7 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
                 headers.append(hdr)
         df = df[headers]
         
-        df.to_csv(file_name, encoding='utf-8', index=False)
+        #df.to_csv(file_name, encoding='utf-8', index=False)
         #logger.info('created file')
         
         MSG_TEXT = 'Dear {},\n\nplease find the resuts from your query attached.\n\n\
@@ -92,14 +94,16 @@ thank you for using Linkero!'.format(User.objects.get(id=user_id).username)
             'LinkeroReports@linkero.ie',
             [to_email]
         )
-        file_attachment = open(file_name, 'r')
-        filename = file_name.split('/')[-1]
-        email.attach(filename, file_attachment.read(), 'text/plain')
+        file_attachment = StringIO()
+        writer = DictWriter(file_attachment, fieldnames=headers)
+        writer.writeheader()
+        writer.writerows(df.to_dict('records'))
+        email.attach(filename, file_attachment.read(), 'text/csv')
         email.send(fail_silently=False)
         file_attachment.close()
         
         # delete the file from system
-        os.remove(file_name)
+        #os.remove(file_name)
         query_status = 'completed'
         CaseDetails.objects(lnkr_query_id=query_id).update(set__file_name=filename)
     
