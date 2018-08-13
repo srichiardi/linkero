@@ -201,7 +201,7 @@ class FileDownload(LoginRequiredMixin, View):
         
         #response = HttpResponse(csv_file, content_type='text/palin')
         
-        response = HttpResponse(content_type='application/octet-stream')
+        response = HttpResponse(content_type='text/csv; charset=utf-8')
         response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
     
         writer = csv.writer(response)
