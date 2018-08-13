@@ -88,12 +88,33 @@
 // 					}
 // 				)
 // 		});
+// 		$('.case-data-download').click(function(event) {
+//  			event.preventDefault();
+// 			$.ajax({
+// 			    url:   '{% url "download_results" %}',
+// 			    data:  {'query_id': $(this).attr('value')},
+// 			    async: false
+// 			});
+// 		});
+		
 		$('.case-data-download').click(function(event) {
- 			event.preventDefault();
+			event.preventDefault();
 			$.ajax({
-			    url:   '{% url "download_results" %}',
-			    data:  {'query_id': $(this).attr('value')},
-			    async: false
+			    type: "GET",
+			    url: '{% url "download_results" %}',
+			    data: {'query_id': $(this).attr('value')},
+			    success: function(response, status, request) {
+			        var disp = request.getResponseHeader('Content-Disposition');
+			        if (disp && disp.search('attachment') != -1) {
+			            var form = $('<form method="GET" action="' + url + '">');
+			            $.each(params, function(k, v) {
+			                form.append($('<input type="hidden" name="' + k +
+			                        '" value="' + v + '">'));
+			            });
+			            $('body').append(form);
+			            form.submit();
+			        }
+			    }
 			});
 		});
 		</script>
