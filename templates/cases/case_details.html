@@ -9,7 +9,7 @@
       </div>
       <div class="modal-body clearfix">
       	<p><strong>Case ID: </strong>{{ case.lnrk_query_id }}</p>
-      	<p><strong>Timestamp: </strong>{{ case.creation_date | date:"d/m/Y H:i }}</p>
+      	<p><strong>Timestamp: </strong>{{ case.creation_date|date:"d/m/Y H:i" }}</p>
       	<p><strong>Platform: </strong>{{ case.platform }}</p>
       	<p><strong>Report: </strong>{{ case.report_type }}</p>
       	<p><strong>Status: </strong>{{ case.status }}</p>
