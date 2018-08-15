@@ -209,7 +209,7 @@ class PasswordChange(LoginRequiredMixin, View):
         return render(request, 'registration/password_change.html', params)
     
 
-class CaseDetails(LoginRequiredMixin, View):
+class CaseDetailsView(LoginRequiredMixin, View):
     
     def get(self, request):
         if request.is_ajax():
@@ -227,8 +227,4 @@ class CaseDetails(LoginRequiredMixin, View):
                 case_details = render_to_string('cases/case_details.html', {'case' : case })
             # return json
             return JsonResponse({'status' : 'success', 'case_details' : case_details})
-
-
-
-
 
