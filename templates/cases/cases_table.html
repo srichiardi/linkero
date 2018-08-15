@@ -78,7 +78,8 @@
 			event.preventDefault();
 			var data = { 'case_nr' : $(this).attr("value") };
 			// start animation of glyphicon spinning
-			$(this).find('span').addClass('glyphicon-menu-hamburger-animate')
+			var glyphicon = $(this).find('span')
+			glyphicon.addClass('glyphicon-menu-hamburger-animate')
 			// ajax request
 			$.get(
 				'{% url "case_details" %}',
@@ -86,7 +87,7 @@
 				function(response) {
 					if (response['status'] == 'success') {
 						// stop glyphicon spinning
-						$(this).find('span').removeClass('glyphicon-menu-hamburger-animate')
+						glyphicon.removeClass('glyphicon-menu-hamburger-animate')
 						// append modal
 						$('body').append(response['case_details']); 
 						// open modal
