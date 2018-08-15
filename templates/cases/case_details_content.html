@@ -4,6 +4,8 @@
       	<p><strong>Platform: </strong>{{ case.platform }}</p>
       	<p><strong>Report: </strong>{{ case.report_type }}</p>
       	<p><strong>Status: </strong>{{ case.status }}</p>
-      	{% for name in case.input_args %}
-      	<p><strong>{{ name }}</strong>{{ case.input_args.name }}</p>
-      	{% endfor %}
+      	<p><strong>'eBay sites:'</strong>{{ case.input_args.ebay_sites }}</p>
+      	<p><strong>'Seller id:'</strong>{{ case.input_args.seller_id }}</p>
+      	<p><strong>'Keywords:'</strong>{{ case.input_args.keywords }}</p>
+      	<p><strong>'Search in description:'</strong>{{ case.input_args.search_desc }}</p>
+
