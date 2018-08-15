@@ -4,6 +4,6 @@
       	<p><strong>Platform: </strong>{{ case.platform }}</p>
       	<p><strong>Report: </strong>{{ case.report_type }}</p>
       	<p><strong>Status: </strong>{{ case.status }}</p>
-      	{% for name, value, pippo, pappo, poppo, puppo, peppo, franco in case.input_args %}
-      	<p><strong>{{ name }}</strong>{{ value }}pippo {{pippo}}, pappo {{pappo}}, poppo {{poppo}}, puppo {{puppo}}, peppo {{peppo}}, franco {{franco}}</p>
+      	{% for name in case.input_args %}
+      	<p><strong>{{ name }}</strong>{{ case.input_args.name }}</p>
       	{% endfor %}
