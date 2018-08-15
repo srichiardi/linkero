@@ -69,7 +69,6 @@ class EbayApi():
         site id as values """
         tot_pages = 1
         page = 1
-        err_occurred = False
         
         while page <= min(100, tot_pages):
             
@@ -78,7 +77,6 @@ class EbayApi():
                                     search_desc = s_desc)
             except EbayApiException as e:
                 err_q.put(e.args[0])
-                err_occurred = True
                 break
             else:
                 tot_pages = int(result_set['findItemsAdvancedResponse'][0]['paginationOutput'][0]['totalPages'][0])
