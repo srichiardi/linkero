@@ -1,0 +1,27 @@
+<div id="case-details-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Case details</h4>
+      </div>
+      <div class="modal-body clearfix">
+      	<p><strong>Case ID: </strong>{{ case.lnrk_query_id }}</p>
+      	<p><strong>Timestamp: </strong>{{ case.creation_date | date:"d/m/Y H:i }}</p>
+      	<p><strong>Platform: </strong>{{ case.platform }}</p>
+      	<p><strong>Report: </strong>{{ case.report_type }}</p>
+      	<p><strong>Status: </strong>{{ case.status }}</p>
+      	{% for field in case.input_args._dynamic_fields %}
+      	<p><strong>{{ field }}</strong>{{ case.input_args[field] }}</p>
+      	{% endfor %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+
+</div>

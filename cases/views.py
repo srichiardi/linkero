@@ -207,3 +207,27 @@ class PasswordChange(LoginRequiredMixin, View):
         params = {'form' : form }
         return render(request, 'registration/password_change.html', params)
     
+
+class CaseDetails(LoginRequiredMixin, View):
+    
+    def get(self, request):
+        if request.is_ajax():
+            mongo_client = connect('linkerodb', username='linkero-user', password='123linkero123')
+            case_nr = query_id = int(request.GET['case_nr'])
+            
+            # check if query id exists associated with requestor
+            try:
+                case = CaseDetails.objects(lnkr_query_id=case_id, lnkr_user_id=request.user.id).get()
+            except CaseDetails.DoesNotExist:
+                # return error message
+                return JsonResponse({'status' : 'failed'})
+            else:
+                case['owner'] = User.objects.get(id=request.user.id).username
+                case_details = render_to_string('cases/case_details.html', {'case' : case })
+            # return json
+            return JsonResponse({'status' : 'success', 'case_details' : case_details})
+
+
+
+
+

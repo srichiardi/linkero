@@ -23,7 +23,7 @@
 					<td>{{ case.title }}</td>
 					<td>{{ case.report_type }}</td>
 					<td>{{ case.status }}</td>
-					<td><a href="#" class="case-data"><span class="glyphicon glyphicon-menu-hamburger"></span></a></td>
+					<td><a href="#" class="case-data" value="{{ case.lnkr_query_id }}"><span class="glyphicon glyphicon-menu-hamburger"></span></a></td>
 					{% if case.status == 'completed' %}
 					<td><a href='./download_results/?query_id={{ case.lnkr_query_id }}'><span class="glyphicon glyphicon-download"></span></a></td>
 					{% else %}
@@ -68,8 +68,39 @@
 		$('.pager').click( function (event) {
 			event.preventDefault();
 			var pageNr = $(this).attr("value");
+			// assigne the page nr to the hidden input value
 			$("#page-number").val(pageNr);
 			get_cases();
+		});
+		
+		// GET case details
+		$('.case-data').click( function (event) {
+			event.preventDefault();
+			var data = { 'case_nr' : $(this).attr("value") };
+			// start animation of glyphicon spinning
+			$(this).find('span').addClass('glyphicon-menu-hamburger-animate')
+			// ajax request
+			$.get(
+				'{% url "case_details" %}',
+				data,
+				function(response) {
+					if (response['status'] == 'success') {
+						// stop glyphicon spinning
+						$(this).find('span').removeClass('glyphicon-menu-hamburger-animate')
+						// append modal
+						$('body').append(response['case_details']); 
+						// open modal
+						$('#case-details-modal').modal('toggle');
+						
+					} else {
+						// stop glyphicon spinning
+						
+						// append modal with error message
+						
+						// open modal
+					}
+				}
+			);
 		});
 		
 		</script>
