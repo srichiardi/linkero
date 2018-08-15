@@ -14,7 +14,7 @@
       	<p><strong>Report: </strong>{{ case.report_type }}</p>
       	<p><strong>Status: </strong>{{ case.status }}</p>
       	{% for field in case.input_args.dynamic_fields %}
-      	<p><strong>{{ field }}</strong>{{ case.input_args[field] }}</p>
+      	<p><strong>{{ field.name }}</strong>{{ field }}</p>
       	{% endfor %}
       </div>
       <div class="modal-footer">
