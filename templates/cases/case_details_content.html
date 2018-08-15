@@ -5,5 +5,5 @@
       	<p><strong>Report: </strong>{{ case.report_type }}</p>
       	<p><strong>Status: </strong>{{ case.status }}</p>
       	{% for field in case.input_args %}
-      	<p><strong>{{ field.name }}</strong>{{ field }}</p>
+      	<p><strong>{{ field.name }}</strong>str: {{ field.str }} value: {{ field.value }} item: {{ field.item }}</p>
       	{% endfor %}
