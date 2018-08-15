@@ -1,0 +1,9 @@
+
+      	<p><strong>Case ID: </strong>{{ case.lnkr_query_id }}</p>
+      	<p><strong>Timestamp: </strong>{{ case.creation_date|date:"d/m/Y H:i" }}</p>
+      	<p><strong>Platform: </strong>{{ case.platform }}</p>
+      	<p><strong>Report: </strong>{{ case.report_type }}</p>
+      	<p><strong>Status: </strong>{{ case.status }}</p>
+      	{% for field in case.input_args %}
+      	<p><strong>{{ field.name }}</strong>{{ field }}</p>
+      	{% endfor %}

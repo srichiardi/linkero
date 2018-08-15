@@ -88,8 +88,10 @@
 					if (response['status'] == 'success') {
 						// stop glyphicon spinning
 						glyphicon.removeClass('glyphicon-menu-hamburger-animate')
+						// clean modal content
+						$('#case-details-content').empty();
 						// append modal
-						$('body').append(response['case_details']); 
+						$('#case-details-content').append(response['case_details']); 
 						// open modal
 						$('#case-details-modal').modal('toggle');
 						

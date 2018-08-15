@@ -224,7 +224,7 @@ class CaseDetailsView(LoginRequiredMixin, View):
                 return JsonResponse({'status' : 'failed'})
             else:
                 case['owner'] = User.objects.get(id=request.user.id).username
-                case_details = render_to_string('cases/case_details.html', {'case' : case })
+                case_details = render_to_string('cases/case_details_content.html', {'case' : case })
             # return json
             return JsonResponse({'status' : 'success', 'case_details' : case_details})
 
