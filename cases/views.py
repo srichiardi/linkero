@@ -218,7 +218,7 @@ class CaseDetailsView(LoginRequiredMixin, View):
             
             # check if query id exists associated with requestor
             try:
-                case = CaseDetails.objects(lnkr_query_id=case_id, lnkr_user_id=request.user.id).get()
+                case = CaseDetails.objects(lnkr_query_id=case_nr, lnkr_user_id=request.user.id).get()
             except CaseDetails.DoesNotExist:
                 # return error message
                 return JsonResponse({'status' : 'failed'})
