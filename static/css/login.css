@@ -13,12 +13,20 @@ body {
   background: linear-gradient(-180deg, #d9d9d9, #e0e0d1);
 }
 
-.form-signin, #logout-box {
+#logout-box {
+  width: 100%;
+  max-width: 450px;
+  padding: 15px;
+  margin: auto;
+}
+
+.form-signin {
   width: 100%;
   max-width: 330px;
   padding: 15px;
   margin: auto;
 }
+
 .form-signin .checkbox {
   font-weight: 400;
 }
