@@ -12,6 +12,7 @@
 						<th>Status</th>
 						<th></th>
 						<th></th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody class="text-left">
@@ -29,6 +30,7 @@
 					{% else %}
 					<td></td>
 					{% endif %}
+					<td><a href="#" class="delete-case" value="{{ case.lnkr_query_id }}"><span class="glyphicon glyphicon-trash"></span></a></td>
 				</tr>
 				{% endfor %}
 				</tbody>
@@ -95,6 +97,28 @@
 						// open modal
 						$('#case-details-modal').modal('toggle');
 						
+					} else {
+						// stop glyphicon spinning
+						
+						// append modal with error message
+						
+						// open modal
+					}
+				}
+			);
+		});
+		
+		// GET case delete
+		$('.delete-case').click( function (event) {
+			event.preventDefault();
+			var data = { 'case_nr' : $(this).attr("value") };
+			// ajax request
+			$.get(
+				'{% url "delete_case" %}',
+				data,
+				function(response) {
+					if (response['status'] == 'success') {
+						get_cases();
 					} else {
 						// stop glyphicon spinning
 						

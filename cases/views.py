@@ -215,7 +215,7 @@ class CaseDetailsView(LoginRequiredMixin, View):
     def get(self, request):
         if request.is_ajax():
             mongo_client = connect('linkerodb', username='linkero-user', password='123linkero123')
-            case_nr = query_id = int(request.GET['case_nr'])
+            case_nr = int(request.GET['case_nr'])
             
             # check if query id exists associated with requestor
             try:
@@ -228,4 +228,42 @@ class CaseDetailsView(LoginRequiredMixin, View):
                 case_details = render_to_string('cases/case_details_content.html', {'case' : case })
             # return json
             return JsonResponse({'status' : 'success', 'case_details' : case_details})
+        
+        
+class DeleteCaseDetails(LoginRequiredMixin, View):
+    
+    def get(self, request):
+        if request.is_ajax():
+            mongo_client = connect('linkerodb', username='linkero-user', password='123linkero123')
+            case_nr = int(request.GET['case_nr'])
+            
+            msgs = {}
+            # check if query id exists associated with requestor
+            try:
+                case = CaseDetails.objects(lnkr_query_id=case_nr, lnkr_user_id=request.user.id).get()
+            except CaseDetails.DoesNotExist:
+                # return error message
+                msgs['case_details_msg'] = 'the case you tried to delete either does not exist or you do not have permission to delete.'
+            else:
+                case.delete()
+                msgs['case_details_msg'] = 'case {} deleted.'.format(case_nr)
+                
+                try:
+                    items = EbayItem.objects(lnkr_query_id = case_nr).all()
+                except EbayItem.DoesNotExist:
+                    msgs['ebay_items_msg'] = 'the listings you tried to delete do not exist.'
+                else:
+                    items_nr = items.delete()
+                    msgs['ebay_items_msg'] = '{} listings deleted.'.format(items_nr)
+                try:
+                    sellers = EbaySellerDetails.objects(lnkr_query_id = case_nr).all()
+                except EbaySellerDetails.DoesNotExist:
+                    msgs['ebay_sellers_msg'] = 'the seller details you tried to delete do not exist.'
+                else:
+                    sellers_nr = sellers.delete()
+                    msgs['ebay_sellers_msg'] = '{} seller details deleted.'.format(sellers_nr)
+                    
+            msgs['status'] = 'success'
+            
+            return JsonResponse(msgs)
 
