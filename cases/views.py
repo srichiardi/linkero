@@ -104,10 +104,11 @@ class CasesView(LoginRequiredMixin, View):
                 if q_title:
                     # create a record with input details
                     query_input = CaseDetails(lnkr_user_id = request.user.id,
-                              platform = 'eBay',
-                              report_type = 'listing details',
+                              platform = form.cleaned_data['platform'].strip(),
+                              report_type = form.cleaned_data['report_type'].strip(),
                               status = 'running',
                               title = q_title,
+                              creation_date = datetime.now(),
                               input_args = InputArgs(**{ 'seller_id' : form.cleaned_data['seller_id'].strip(),
                                             'keywords' : form.cleaned_data['keywords'].strip(),
                                             'ebay_sites' : form.cleaned_data['ebay_sites'],

@@ -31,22 +31,13 @@ class Cases(models.Model):
 class InputArgs(DynamicEmbeddedDocument):
     pass
 
-# class QueryInputs(DynamicDocument):
-#     lnkr_query_id = IntField()
-#     lnkr_user_id = IntField()
-#     platform = StringField()
-#     report_type = StringField()
-#     creation_date = DateTimeField(default=datetime.now())
-#     status = StringField()
-#     input_args = EmbeddedDocumentField(InputArgs, default=InputArgs())
-    
 class CaseDetails(DynamicDocument):
     lnkr_query_id = SequenceField()
     lnkr_user_id = IntField()
     platform = StringField()
     report_type = StringField()
     title = StringField()
-    creation_date = DateTimeField(default=datetime.now())
+    creation_date = DateTimeField()
     status = StringField()
     input_args = EmbeddedDocumentField(InputArgs, default=InputArgs())
     file_name = StringField()

@@ -45,11 +45,11 @@ class EbayListingForm(forms.Form):
     EBAY_SITES_CHOICES = ((key, globalSiteMap[key]['name']) for key in globalSiteMap.keys())
     
     platform = forms.CharField(
-        widget = forms.HiddenInput(attrs={"value" : 1})
+        widget = forms.HiddenInput(attrs={"value" : "eBay"})
     )
     
     report_type = forms.CharField(
-        widget = forms.HiddenInput(attrs={"value" : 1})
+        widget = forms.HiddenInput(attrs={"value" : "listing details"})
     )
     
     ebay_sites = forms.MultipleChoiceField(
