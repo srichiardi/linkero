@@ -67,7 +67,7 @@ def send_ebay_listing_report(to_email, user_id=None, query_id=None, seller_id=No
         # to avoid key errors when a header is not in the dataframe
         headers = []
         main_headers = ["Seller.UserID", "ItemID", "ListingStatus", "Location", "Quantity", "QuantitySold", "CurrentPrice.Value",
-                "CurrentPrice.CurrencyID", "Title", "GlobalShipping", "ShipToLocations",
+                "CurrentPrice.CurrencyID", "Title", "PrimaryCategoryName", "GlobalShipping", "ShipToLocations",
                 "BusinessSellerDetails.AdditionalContactInformation", "BusinessSellerDetails.Address.Street1", 
                 "BusinessSellerDetails.Address.Street2", "BusinessSellerDetails.Address.CityName", 
                 "BusinessSellerDetails.Address.StateOrProvince", "BusinessSellerDetails.Address.CountryName", 

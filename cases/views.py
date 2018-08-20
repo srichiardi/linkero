@@ -164,7 +164,7 @@ class FileDownload(LoginRequiredMixin, View):
         
         headers = []
         main_headers = ["Seller.UserID", "ItemID", "ListingStatus", "Location", "Quantity", "QuantitySold", "CurrentPrice.Value",
-                "CurrentPrice.CurrencyID", "Title", "GlobalShipping", "ShipToLocations",
+                "CurrentPrice.CurrencyID", "Title", "PrimaryCategoryName", "GlobalShipping", "ShipToLocations",
                 "BusinessSellerDetails.AdditionalContactInformation", "BusinessSellerDetails.Address.Street1", 
                 "BusinessSellerDetails.Address.Street2", "BusinessSellerDetails.Address.CityName", 
                 "BusinessSellerDetails.Address.StateOrProvince", "BusinessSellerDetails.Address.CountryName", 
