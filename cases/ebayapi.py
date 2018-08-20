@@ -201,21 +201,29 @@ class EbayApi():
 
     def get_seller_details(self, seller_id=None, out_q=None, err_q=None):
         
-        url_base = "http://open.api.ebay.com/shopping?"
+        url = "http://open.api.ebay.com/shopping"
         
         payload = { 'callname' : 'GetUserProfile',
                     'responseencoding' : 'JSON',
                     'appid' : self.api_key,
-                    'version' : 967,
+                    'version' : '967',
                     'IncludeSelector' : 'FeedbackHistory',
                     'UserID' : seller_id
                     }
-
-        url = url_base + urlencode(payload)
-        r = requests.get(url)
+        
+        r = requests.get(url, params=payload)
         j_seller = json.loads(r.text)
+        j_slr = j_seller['User']
+        # include stats about feedbacks received
+        j_slr['UniqueNegativeFeedbackCount'] = ''
+        j_slr['UniqueNeutralFeedbackCount'] = ''
+        j_slr['UniquePositiveFeedbackCount'] = ''
+        for k in j_seller['FeedbackHistory'].keys():
+            if k[:6] == "Unique":
+                j_slr[k] = j_seller['FeedbackHistory'][k]
+                
         if j_seller['Ack'] == 'Success':
-            out_q.put(j_seller['User'])
+            out_q.put(j_slr)
         else:
             ERR_MSG = {'platform' : 'ebay',
                        'api_call' : 'GetUserProfile',

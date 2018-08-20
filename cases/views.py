@@ -173,7 +173,7 @@ class FileDownload(LoginRequiredMixin, View):
                 "BusinessSellerDetails.Address.LastName", "BusinessSellerDetails.Email", "BusinessSellerDetails.LegalInvoice", 
                 "BusinessSellerDetails.TradeRegistrationNumber", "BusinessSellerDetails.VATDetails.VATID", 
                 "BusinessSellerDetails.VATDetails.VATPercent", "BusinessSellerDetails.VATDetails.VATSite", "Seller.FeedbackScore", 
-                "Seller.PositiveFeedbackPercent"]
+                "Seller.PositiveFeedbackPercent", "UniquePositiveFeedbackCount", "UniqueNeutralFeedbackCount", "UniqueNegativeFeedbackCount"]
         df_headers = df.columns
         for hdr in main_headers:
             if hdr in df_headers:
