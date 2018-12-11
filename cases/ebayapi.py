@@ -31,12 +31,18 @@ class EbayApi():
     def find_items(self, ebay_site='US', page_nr=1, keywords=None, seller_id=None, search_desc=None):
     
         url_base = "http://svcs.ebay.com/services/search/FindingService/v1?"
+        
+        # check input provided
+        try:
+            global_site_id = globalSiteMap[ebay_site]['globalID']
+        except KeyError:
+            raise EbayBadSite("Wrong ebay site input!")
     
         payload = { 'OPERATION-NAME' : 'findItemsAdvanced',
                      'SERVICE-VERSION' : '1.13.0',
                      'SECURITY-APPNAME' : self.api_key,
                      'RESPONSE-DATA-FORMAT' : 'JSON',
-                     'GLOBAL-ID' : globalSiteMap[ebay_site]['globalID'],
+                     'GLOBAL-ID' : global_site_id,
                      'paginationInput.entriesPerPage' : 100,
                      'paginationInput.pageNumber' : page_nr,
                      'REST-PAYLOAD' : 'true',
