@@ -12,6 +12,9 @@ from mongoengine import connect
 class EbayApiException(Exception):
     pass
 
+class EbayBadSite(Exception):
+    pass
+
 
 class EbayApi():
     def __init__(self):

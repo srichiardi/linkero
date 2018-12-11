@@ -1,5 +1,5 @@
 from django.test import TestCase
-from cases.ebayapi import EbayApi
+from cases.ebayapi import EbayApi, EbayBadSite
 
 # Create your tests here.
 class FindItemsTest(TestCase):
